@@ -10,6 +10,8 @@ class PracticePage extends ConsumerStatefulWidget {
 }
 
 class _PracticePageState extends ConsumerState<PracticePage> {
+  bool showAnswer = false;
+
   @override
   Widget build(BuildContext context) {
     final card = ref.watch(currentCardProvider);
@@ -17,7 +19,7 @@ class _PracticePageState extends ConsumerState<PracticePage> {
     return Scaffold(
         appBar: AppBar(),
         body: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
             Expanded(
@@ -26,9 +28,21 @@ class _PracticePageState extends ConsumerState<PracticePage> {
                   return const Text("No cards");
                 }
                 return Card(
-                    child: Center(
-                  child: Text(card.prompt,
-                      style: Theme.of(context).textTheme.headlineLarge),
+                    child: Stack(
+                  alignment: Alignment.bottomCenter,
+                  children: [
+                    Center(
+                      child: Text(showAnswer ? card.answer : card.prompt,
+                          style: Theme.of(context).textTheme.headlineLarge),
+                    ),
+                    IconButton(
+                        onPressed: () {
+                          setState(() {
+                            showAnswer = !showAnswer;
+                          });
+                        },
+                        icon: const Icon(Icons.replay)),
+                  ],
                 ));
               }, error: (_, __) {
                 return const Text("Error");
@@ -52,6 +66,9 @@ class _PracticePageState extends ConsumerState<PracticePage> {
                     child: ElevatedButton(
                       onPressed: () {
                         ref.read(currentCardProvider.notifier).next();
+                        setState(() {
+                          showAnswer = false;
+                        });
                       },
                       child: const Text("I KNOW"),
                     ),
