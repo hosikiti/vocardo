@@ -6,7 +6,22 @@ part of 'provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$cardListHash() => r'ca8b21d24a92946b460034b4ac682191dc1a0646';
+String _$currentCardHash() => r'6cb59ddca1e4c2054e8692dd2dc52cb2729674f5';
+
+/// See also [CurrentCard].
+@ProviderFor(CurrentCard)
+final currentCardProvider =
+    AutoDisposeAsyncNotifierProvider<CurrentCard, CardItem?>.internal(
+  CurrentCard.new,
+  name: r'currentCardProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$currentCardHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$CurrentCard = AutoDisposeAsyncNotifier<CardItem?>;
+String _$cardListHash() => r'904484a8fa04f3afd65337194dfb98a06a845282';
 
 /// See also [CardList].
 @ProviderFor(CardList)

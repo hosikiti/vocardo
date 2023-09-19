@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:vocardo/edit.dart';
+import 'package:vocardo/practice.dart';
 import 'package:vocardo/provider.dart';
 
 void main() {
@@ -92,18 +93,17 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                     ListTile(
                       leading: const Icon(Icons.album),
                       title: Text(cards[index].prompt),
+                      titleTextStyle: const TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 24),
                       subtitle: Text(cards[index].answer),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
-                        TextButton(
-                          child: const Text('Edit'),
-                          onPressed: () {/* ... */},
-                        ),
-                        const SizedBox(width: 8),
-                        TextButton(
-                          child: const Text('Delete'),
+                        IconButton(
+                          icon: const Icon(Icons.delete),
                           onPressed: () {
                             ref
                                 .read(cardListProvider.notifier)
@@ -129,13 +129,29 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
           );
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => const EditPage()));
-        },
-        tooltip: 'Add a new word',
-        child: const Icon(Icons.add),
+      floatingActionButton: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          FloatingActionButton(
+            heroTag: "practice",
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => const PracticePage()));
+            },
+            tooltip: 'Practice',
+            child: const Icon(Icons.play_arrow),
+          ),
+          const SizedBox(height: 16),
+          FloatingActionButton(
+            heroTag: "add",
+            onPressed: () {
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => const EditPage()));
+            },
+            tooltip: 'Add a new word',
+            child: const Icon(Icons.add),
+          )
+        ],
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
