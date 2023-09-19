@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:vocardo/edit.dart';
 import 'package:vocardo/practice.dart';
 import 'package:vocardo/provider.dart';
@@ -64,6 +63,8 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     final cardsRef = ref.watch(cardListProvider);
+    final noCard =
+        cardsRef.valueOrNull == null || cardsRef.valueOrNull!.isEmpty;
 
     return Scaffold(
       appBar: AppBar(
@@ -125,18 +126,18 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
       floatingActionButton: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Visibility(
-            visible: cardsRef.valueOrNull != null &&
-                cardsRef.valueOrNull!.isNotEmpty,
-            child: FloatingActionButton(
-              heroTag: "practice",
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const PracticePage()));
-              },
-              tooltip: 'Practice',
-              child: const Icon(Icons.play_arrow),
-            ),
+          FloatingActionButton(
+            heroTag: "practice",
+            onPressed: noCard
+                ? null
+                : () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const PracticePage()));
+                  },
+            disabledElevation: noCard ? 0 : 6,
+            foregroundColor: noCard ? Colors.grey : null,
+            tooltip: 'Practice',
+            child: const Icon(Icons.play_arrow),
           ),
           const SizedBox(height: 16),
           FloatingActionButton(
