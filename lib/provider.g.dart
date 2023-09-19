@@ -6,12 +6,12 @@ part of 'provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$cardListHash() => r'19a7180545cd96b3e178aeef0ff2e827f822523b';
+String _$cardListHash() => r'7451d0cd311b80f00ed7ba1b226b4cd7e716ae1e';
 
 /// See also [CardList].
 @ProviderFor(CardList)
 final cardListProvider =
-    AutoDisposeNotifierProvider<CardList, List<CardItem>>.internal(
+    AutoDisposeAsyncNotifierProvider<CardList, List<CardItem>>.internal(
   CardList.new,
   name: r'cardListProvider',
   debugGetCreateSourceHash:
@@ -20,6 +20,6 @@ final cardListProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$CardList = AutoDisposeNotifier<List<CardItem>>;
+typedef _$CardList = AutoDisposeAsyncNotifier<List<CardItem>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

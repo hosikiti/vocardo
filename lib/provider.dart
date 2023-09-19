@@ -1,31 +1,45 @@
+import 'package:flutter/widgets.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'provider.g.dart';
 
 class CardItem {
-  const CardItem({required this.prompt, required this.answer});
+  CardItem({required this.prompt, required this.answer});
 
   final String prompt;
   final String answer;
+  final String id = UniqueKey().toString();
 }
 
 @riverpod
 class CardList extends _$CardList {
   @override
-  List<CardItem> build() {
-    return [
-      const CardItem(prompt: "quando", answer: "when"),
-    ];
+  Future<List<CardItem>> build() async {
+    return Future.value([
+      CardItem(prompt: "quando", answer: "when"),
+    ]);
   }
 
   // Add methods to mutate the state
-  addCard() {
-    state.add(const CardItem(prompt: "cansado", answer: "tired"));
-    state = state.sublist(0);
+  addCard() async {
+    final item = CardItem(prompt: "cansado", answer: "tired");
+    state = const AsyncValue.loading();
+    state = await AsyncValue.guard(() async {
+      if (state.valueOrNull == null) {
+        return [];
+      }
+
+      return [...state.valueOrNull!, item];
+    });
   }
 
-  delete(CardItem card) {
-    state.remove(card);
-    state = state.sublist(0);
+  delete(CardItem card) async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() async {
+      if (state.valueOrNull == null) {
+        return [];
+      }
+      return state.valueOrNull!.where((item) => item != card).toList();
+    });
   }
 }

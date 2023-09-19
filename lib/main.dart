@@ -61,7 +61,7 @@ class MyHomePage extends ConsumerStatefulWidget {
 class _MyHomePageState extends ConsumerState<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    final cards = ref.watch(cardListProvider);
+    final cardsRef = ref.watch(cardListProvider);
 
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
@@ -69,6 +69,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
+
     return Scaffold(
       appBar: AppBar(
         // TRY THIS: Try changing the color here to a specific color (to
@@ -79,41 +80,53 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: ListView.builder(
-        itemBuilder: (context, index) {
-          return Card(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                ListTile(
-                  leading: const Icon(Icons.album),
-                  title: Text(cards[index].prompt),
-                  subtitle: Text(cards[index].answer),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+      body: cardsRef.when(
+        data: (cards) {
+          return ListView.builder(
+            itemBuilder: (context, index) {
+              return Card(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    TextButton(
-                      child: const Text('Edit'),
-                      onPressed: () {/* ... */},
+                    ListTile(
+                      leading: const Icon(Icons.album),
+                      title: Text(cards[index].prompt),
+                      subtitle: Text(cards[index].answer),
                     ),
-                    const SizedBox(width: 8),
-                    TextButton(
-                      child: const Text('Delete'),
-                      onPressed: () {
-                        ref
-                            .read(cardListProvider.notifier)
-                            .delete(cards[index]);
-                      },
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        TextButton(
+                          child: const Text('Edit'),
+                          onPressed: () {/* ... */},
+                        ),
+                        const SizedBox(width: 8),
+                        TextButton(
+                          child: const Text('Delete'),
+                          onPressed: () {
+                            ref
+                                .read(cardListProvider.notifier)
+                                .delete(cards[index]);
+                          },
+                        ),
+                        const SizedBox(width: 8),
+                      ],
                     ),
-                    const SizedBox(width: 8),
                   ],
                 ),
-              ],
-            ),
+              );
+            },
+            itemCount: cards.length,
           );
         },
-        itemCount: cards.length,
+        error: (_, __) {
+          return const Text("Error");
+        },
+        loading: () {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
