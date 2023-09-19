@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:vocardo/edit.dart';
 import 'package:vocardo/provider.dart';
 
 void main() {
@@ -130,7 +131,8 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          ref.read(cardListProvider.notifier).addCard();
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (context) => const EditPage()));
         },
         tooltip: 'Add a new word',
         child: const Icon(Icons.add),

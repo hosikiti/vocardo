@@ -21,14 +21,13 @@ class CardList extends _$CardList {
   }
 
   // Add methods to mutate the state
-  addCard() async {
-    final item = CardItem(prompt: "cansado", answer: "tired");
+  addCard(String prompt, String answer) async {
+    final item = CardItem(prompt: prompt, answer: answer);
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
       if (state.valueOrNull == null) {
         return [];
       }
-
       return [...state.valueOrNull!, item];
     });
   }
