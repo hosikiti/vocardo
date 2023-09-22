@@ -1,14 +1,16 @@
-import 'package:flutter/widgets.dart';
+import 'package:isar/isar.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:vocardo/main.dart';
+import 'package:vocardo/model/item.dart';
 
 part 'provider.g.dart';
 
 class CardItem {
-  CardItem({required this.prompt, required this.answer});
+  CardItem({required this.id, required this.prompt, required this.answer});
 
   final String prompt;
   final String answer;
-  final String id = UniqueKey().toString();
+  final int id;
 }
 
 @riverpod
@@ -44,16 +46,23 @@ class CurrentCard extends _$CurrentCard {
 class CardList extends _$CardList {
   @override
   Future<List<CardItem>> build() async {
-    return Future.value([
-      CardItem(prompt: "quando", answer: "when"),
-      CardItem(prompt: "Bon dia!", answer: "Good morning!"),
-      CardItem(prompt: "Ate ja!", answer: "See you later!"),
-    ]);
+    final items = await isar.items.where().findAll();
+
+    final cardItems = items.map((item) {
+      return CardItem(id: item.id, prompt: item.question, answer: item.answer);
+    }).toList();
+
+    return Future.value(cardItems);
   }
 
   // Add methods to mutate the state
   addCard(String prompt, String answer) async {
-    final item = CardItem(prompt: prompt, answer: answer);
+    final it = Item()
+      ..question = prompt
+      ..answer = answer;
+    await isar.writeTxn(() async => await isar.items.put(it));
+
+    final item = CardItem(id: it.id, prompt: prompt, answer: answer);
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
       if (state.valueOrNull == null) {
@@ -64,6 +73,8 @@ class CardList extends _$CardList {
   }
 
   delete(CardItem card) async {
+    await isar.writeTxn(() async => await isar.items.delete(card.id));
+
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
       if (state.valueOrNull == null) {
