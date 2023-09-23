@@ -63,13 +63,20 @@ class _PracticePageState extends ConsumerState<PracticePage> {
                   const SizedBox(width: 16),
                   Expanded(
                     child: ElevatedButton(
+                      onPressed: () {},
+                      child: const Text("OK"),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: ElevatedButton(
                       onPressed: () {
                         ref.read(currentCardProvider.notifier).next();
                         setState(() {
                           showAnswer = false;
                         });
                       },
-                      child: const Text("I KNOW"),
+                      child: const Text("EASY"),
                     ),
                   )
                 ],
