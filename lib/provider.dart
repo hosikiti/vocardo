@@ -1,9 +1,25 @@
 import 'package:isar/isar.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:vocardo/main.dart';
+import 'package:vocardo/card_manager.dart';
 import 'package:vocardo/model/item.dart';
 
 part 'provider.g.dart';
+
+@Riverpod(keepAlive: true)
+Future<Isar> isar(IsarRef ref) async {
+  final dir = await getApplicationDocumentsDirectory();
+  return Isar.open(
+    [ItemSchema],
+    directory: dir.path,
+  );
+}
+
+@riverpod
+Future<CardManager> cardManager(CardManagerRef ref) async {
+  final isar = await ref.watch(isarProvider.future);
+  return CardManager(isar);
+}
 
 class CardItem {
   CardItem({required this.id, required this.prompt, required this.answer});
@@ -44,42 +60,30 @@ class CurrentCard extends _$CurrentCard {
 
 @riverpod
 class CardList extends _$CardList {
+  final hoge = 0;
+
   @override
   Future<List<CardItem>> build() async {
-    final items = await isar.items.where().findAll();
+    final man = await ref.read(cardManagerProvider.future);
 
-    final cardItems = items.map((item) {
-      return CardItem(id: item.id, prompt: item.question, answer: item.answer);
-    }).toList();
-
-    return Future.value(cardItems);
+    return man.getAll();
   }
 
-  // Add methods to mutate the state
-  addCard(String prompt, String answer) async {
-    final it = Item()
-      ..question = prompt
-      ..answer = answer;
-    await isar.writeTxn(() async => await isar.items.put(it));
-
-    final item = CardItem(id: it.id, prompt: prompt, answer: answer);
-    state = const AsyncValue.loading();
+  add(String prompt, String answer) async {
+    final man = await ref.read(cardManagerProvider.future);
+    await man.addCard(prompt, answer);
+    state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
-      if (state.valueOrNull == null) {
-        return [];
-      }
-      return [...state.valueOrNull!, item];
+      return man.getAll();
     });
   }
 
-  delete(CardItem card) async {
-    await isar.writeTxn(() async => await isar.items.delete(card.id));
+  Future<void> delete(CardItem card) async {
+    final man = await ref.read(cardManagerProvider.future);
+    man.deleteCard(card.id);
 
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
-      if (state.valueOrNull == null) {
-        return [];
-      }
       return state.valueOrNull!.where((item) => item != card).toList();
     });
   }

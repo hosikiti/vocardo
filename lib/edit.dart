@@ -49,7 +49,7 @@ class _EditPageState extends ConsumerState<EditPage> {
 
                   ref
                       .read(cardListProvider.notifier)
-                      .addCard(promptController.text, answerController.text);
+                      .add(promptController.text, answerController.text);
                   Navigator.pop(context);
                 },
                 child: const Text("Add"))

@@ -6,6 +6,34 @@ part of 'provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+String _$isarHash() => r'5185c31454eab905321cef3fc2857ec3f69c8f33';
+
+/// See also [isar].
+@ProviderFor(isar)
+final isarProvider = FutureProvider<Isar>.internal(
+  isar,
+  name: r'isarProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$isarHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef IsarRef = FutureProviderRef<Isar>;
+String _$cardManagerHash() => r'b9947b77fe8fb9b38a1770bce912b26785e00145';
+
+/// See also [cardManager].
+@ProviderFor(cardManager)
+final cardManagerProvider = AutoDisposeFutureProvider<CardManager>.internal(
+  cardManager,
+  name: r'cardManagerProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$cardManagerHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef CardManagerRef = AutoDisposeFutureProviderRef<CardManager>;
 String _$currentCardHash() => r'6cb59ddca1e4c2054e8692dd2dc52cb2729674f5';
 
 /// See also [CurrentCard].
@@ -21,7 +49,7 @@ final currentCardProvider =
 );
 
 typedef _$CurrentCard = AutoDisposeAsyncNotifier<CardItem?>;
-String _$cardListHash() => r'781d674a318d57843d0e143c34966ff044510b3c';
+String _$cardListHash() => r'7fffe0778e48ffcffca0b018adb8cd050fc21715';
 
 /// See also [CardList].
 @ProviderFor(CardList)

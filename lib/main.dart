@@ -1,22 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:isar/isar.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:vocardo/edit.dart';
-import 'package:vocardo/model/item.dart';
 import 'package:vocardo/practice.dart';
 import 'package:vocardo/provider.dart';
 
-late final Isar isar;
-
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  final dir = await getApplicationDocumentsDirectory();
-  isar = await Isar.open(
-    [ItemSchema],
-    directory: dir.path,
-  );
-
   runApp(const ProviderScope(child: MyApp()));
 }
 
@@ -110,8 +98,8 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                       children: <Widget>[
                         IconButton(
                           icon: const Icon(Icons.delete),
-                          onPressed: () {
-                            ref
+                          onPressed: () async {
+                            await ref
                                 .read(cardListProvider.notifier)
                                 .delete(cards[index]);
                           },
