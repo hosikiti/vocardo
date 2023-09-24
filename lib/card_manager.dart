@@ -9,14 +9,12 @@ class CardManager {
 
   Future<List<CardItem>> getAll() async {
     final items = await isar.items.where().findAll();
-    return items.map((item) {
-      return CardItem(id: item.id, prompt: item.question, answer: item.answer);
-    }).toList();
+    return items.map((item) => CardItem.fromModel(item)).toList();
   }
 
-  Future<Item> addCard(String prompt, String answer) async {
+  Future<Item> addCard(String question, String answer) async {
     final it = Item()
-      ..question = prompt
+      ..question = question
       ..answer = answer;
     await isar.writeTxn(() async => await isar.items.put(it));
     return it;

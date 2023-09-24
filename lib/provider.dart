@@ -22,11 +22,16 @@ Future<CardManager> cardManager(CardManagerRef ref) async {
 }
 
 class CardItem {
-  CardItem({required this.id, required this.prompt, required this.answer});
+  CardItem({required this.id, required this.question, required this.answer});
 
-  final String prompt;
+  final String question;
   final String answer;
   final int id;
+
+  CardItem.fromModel(Item item)
+      : id = item.id,
+        question = item.question,
+        answer = item.answer;
 }
 
 @riverpod
@@ -60,8 +65,6 @@ class CurrentCard extends _$CurrentCard {
 
 @riverpod
 class CardList extends _$CardList {
-  final hoge = 0;
-
   @override
   Future<List<CardItem>> build() async {
     final man = await ref.read(cardManagerProvider.future);
@@ -71,10 +74,10 @@ class CardList extends _$CardList {
 
   add(String prompt, String answer) async {
     final man = await ref.read(cardManagerProvider.future);
-    await man.addCard(prompt, answer);
+    final newItem = await man.addCard(prompt, answer);
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
-      return man.getAll();
+      return [...state.valueOrNull!, CardItem.fromModel(newItem)];
     });
   }
 

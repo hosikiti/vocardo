@@ -31,7 +31,7 @@ class _PracticePageState extends ConsumerState<PracticePage> {
                   alignment: Alignment.bottomCenter,
                   children: [
                     Center(
-                      child: Text(showAnswer ? card.answer : card.prompt,
+                      child: Text(showAnswer ? card.answer : card.question,
                           style: Theme.of(context).textTheme.headlineLarge),
                     ),
                     IconButton(

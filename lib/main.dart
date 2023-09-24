@@ -86,7 +86,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                   children: <Widget>[
                     ListTile(
                       leading: const Icon(Icons.album),
-                      title: Text(cards[index].prompt),
+                      title: Text(cards[index].question),
                       titleTextStyle: const TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.bold,

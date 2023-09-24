@@ -49,7 +49,7 @@ final currentCardProvider =
 );
 
 typedef _$CurrentCard = AutoDisposeAsyncNotifier<CardItem?>;
-String _$cardListHash() => r'7fffe0778e48ffcffca0b018adb8cd050fc21715';
+String _$cardListHash() => r'870760665fff28173ae6ac5f64ea07560befd8a6';
 
 /// See also [CardList].
 @ProviderFor(CardList)
