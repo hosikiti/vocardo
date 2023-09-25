@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:vocardo/provider.dart';
+import 'package:vocardo/core/service/card/current_card_provider.dart';
 
 class PracticePage extends ConsumerStatefulWidget {
   const PracticePage({Key? key}) : super(key: key);
