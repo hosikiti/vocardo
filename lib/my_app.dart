@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vocardo/core/service/card/card_list_provider.dart';
+import 'package:vocardo/core/widget/dialog_widget.dart';
 import 'package:vocardo/feature/edit/edit.dart';
 import 'package:vocardo/feature/practice/practice.dart';
 
@@ -95,6 +96,10 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                         IconButton(
                           icon: const Icon(Icons.delete),
                           onPressed: () async {
+                            final yes = await showOkCancelDialog(context,
+                                title: "Delete", content: "Are you sure?");
+                            if (!yes) return;
+
                             await ref
                                 .read(cardListProvider.notifier)
                                 .delete(cards[index]);
