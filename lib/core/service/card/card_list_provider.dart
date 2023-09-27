@@ -1,9 +1,6 @@
-import 'package:isar/isar.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:vocardo/core/model/item.dart';
 import 'package:vocardo/core/service/card/card_service.dart';
-import 'package:vocardo/core/service/isar/isar_service.dart';
 
 part 'card_list_provider.g.dart';
 
