@@ -58,6 +58,7 @@ dev_dependencies:
   riverpod_generator: ^2.3.1
   riverpod_lint: ^2.0.3
   isar_generator:
+  record: ^4.4.4
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

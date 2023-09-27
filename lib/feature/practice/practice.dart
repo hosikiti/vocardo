@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vocardo/core/service/card/current_card_provider.dart';
+import 'package:record/record.dart';
+import 'package:vocardo/core/widget/recording_dialog_widget.dart';
 
 class PracticePage extends ConsumerStatefulWidget {
   const PracticePage({Key? key}) : super(key: key);
@@ -34,13 +36,27 @@ class _PracticePageState extends ConsumerState<PracticePage> {
                       child: Text(showAnswer ? card.answer : card.question,
                           style: Theme.of(context).textTheme.headlineLarge),
                     ),
-                    IconButton(
-                        onPressed: () {
-                          setState(() {
-                            showAnswer = !showAnswer;
-                          });
-                        },
-                        icon: const Icon(Icons.replay)),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            showRecordingDialog(context);
+                          },
+                          icon: const Icon(Icons.radio_button_checked),
+                        ),
+
+                        /// Recording button
+                        IconButton(
+                          onPressed: () async {
+                            setState(() {
+                              showAnswer = !showAnswer;
+                            });
+                          },
+                          icon: const Icon(Icons.replay),
+                        ),
+                      ],
+                    ),
                   ],
                 ));
               }, error: (_, __) {

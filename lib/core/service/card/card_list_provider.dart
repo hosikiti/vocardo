@@ -26,7 +26,7 @@ class CardList extends _$CardList {
     return man.getAll();
   }
 
-  add(String prompt, String answer) async {
+  Future<void> add(String prompt, String answer) async {
     final man = await ref.read(cardServiceProvider.future);
     final newItem = await man.addCard(prompt, answer);
     state = const AsyncLoading();
