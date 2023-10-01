@@ -1,5 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:vocardo/core/service/recorder/recorder_service.dart';
+import 'package:audioplayers/audioplayers.dart';
+import 'package:vocardo/core/widget/elapsed_time_widget.dart';
 
 Future<void> showRecordingDialog(BuildContext context) async {
   await showModalBottomSheet(
@@ -45,18 +51,53 @@ class _RecorderPanelState extends ConsumerState<RecorderPanel> {
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              TextButton(
+                  onPressed: () async {
+                    final tmpPath = await getTemporaryDirectory();
+                    final filePath = '${tmpPath.path}/myFile.m4a';
+                    AudioPlayer audioPlayer = AudioPlayer();
+                    await audioPlayer.play(DeviceFileSource(filePath));
+                  },
+                  child: const Text("xxxx")),
               IconButton(
                   iconSize: 64,
                   color: Colors.red,
-                  onPressed: () {
+                  onPressed: () async {
+                    final recorder = await ref.read(recorderProvider.future);
+                    final ellapsed =
+                        ref.read(recordElapsedTimeProvider.notifier);
+                    final recording = !_isRecording;
+                    if (recording) {
+                      // start recording
+                      await recorder.startRec();
+                      ellapsed.start();
+                    } else {
+                      ellapsed.stop();
+                      final data = await recorder.stopRec();
+                      print("recorded length: ${data.length}");
+
+                      final audio = base64Decode(data);
+                      AudioPlayer audioPlayer = AudioPlayer();
+                      await audioPlayer.play(BytesSource(audio));
+                    }
+
                     setState(() {
-                      _isRecording = !_isRecording;
+                      _isRecording = recording;
                     });
                   },
                   icon: !_isRecording
                       ? const Icon(Icons.radio_button_checked)
                       : const Icon(Icons.stop)),
-              const Text("Tap to start recording"),
+              _isRecording
+                  ? const SizedBox.shrink()
+                  : const Text("Tap to start recording"),
+              Consumer(builder: ((context, ref, child) {
+                final elapsed = ref.watch(recordElapsedTimeProvider);
+                if (!_isRecording) {
+                  return const SizedBox.shrink();
+                }
+                return ElapsedTime(elapsedInSec: elapsed);
+              }))
             ],
           ),
         ],

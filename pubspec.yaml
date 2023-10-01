@@ -41,6 +41,8 @@ dependencies:
   isar:
   isar_flutter_libs:
   path_provider:
+  record: ^4.4.4
+  audioplayers: ^5.1.0
 
 dev_dependencies:
   flutter_test:
@@ -58,7 +60,6 @@ dev_dependencies:
   riverpod_generator: ^2.3.1
   riverpod_lint: ^2.0.3
   isar_generator:
-  record: ^4.4.4
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
