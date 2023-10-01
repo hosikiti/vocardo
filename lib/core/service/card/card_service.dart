@@ -43,4 +43,9 @@ class CardService {
       await isar.items.put(item);
     });
   }
+
+  Future<List<int>?> getSound(int id) async {
+    final item = await isar.items.get(id);
+    return item?.soundData;
+  }
 }

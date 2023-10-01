@@ -1,8 +1,12 @@
+import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vocardo/core/service/card/current_card_provider.dart';
 import 'package:record/record.dart';
 import 'package:vocardo/core/widget/recording_dialog_widget.dart';
+
+import '../../core/service/card/card_service.dart';
 
 class PracticePage extends ConsumerStatefulWidget {
   const PracticePage({Key? key}) : super(key: key);
@@ -44,6 +48,23 @@ class _PracticePageState extends ConsumerState<PracticePage> {
                             showRecordingDialog(context);
                           },
                           icon: const Icon(Icons.radio_button_checked),
+                        ),
+
+                        // Play button
+                        IconButton(
+                          onPressed: () async {
+                            AudioPlayer audioPlayer = AudioPlayer();
+                            final cardService =
+                                await ref.read(cardServiceProvider.future);
+                            final audioData =
+                                await cardService.getSound(card.id);
+                            if (audioData == null) {
+                              return;
+                            }
+                            await audioPlayer.play(
+                                BytesSource(Uint8List.fromList(audioData)));
+                          },
+                          icon: const Icon(Icons.volume_up),
                         ),
 
                         /// Recording button
