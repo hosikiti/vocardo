@@ -47,7 +47,7 @@ class _PracticePageState extends ConsumerState<PracticePage> {
                           onPressed: () {
                             showRecordingDialog(context);
                           },
-                          icon: const Icon(Icons.radio_button_checked),
+                          icon: const Icon(Icons.mic),
                         ),
 
                         // Play button
