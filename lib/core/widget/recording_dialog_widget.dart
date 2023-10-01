@@ -1,8 +1,11 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:vocardo/core/service/card/card_service.dart';
+import 'package:vocardo/core/service/card/current_card_provider.dart';
 import 'package:vocardo/core/service/recorder/recorder_service.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:vocardo/core/widget/elapsed_time_widget.dart';
@@ -74,11 +77,17 @@ class _RecorderPanelState extends ConsumerState<RecorderPanel> {
                     } else {
                       ellapsed.stop();
                       final data = await recorder.stopRec();
-                      print("recorded length: ${data.length}");
-
-                      final audio = base64Decode(data);
                       AudioPlayer audioPlayer = AudioPlayer();
-                      await audioPlayer.play(BytesSource(audio));
+                      await audioPlayer
+                          .play(BytesSource(Uint8List.fromList(data)));
+
+                      final card = ref.read(currentCardProvider).valueOrNull;
+                      if (card != null) {
+                        final cardService =
+                            await ref.read(cardServiceProvider.future);
+                        cardService.updateSound(card.id, data);
+                        print("sound updated");
+                      }
                     }
 
                     setState(() {
@@ -86,8 +95,8 @@ class _RecorderPanelState extends ConsumerState<RecorderPanel> {
                     });
                   },
                   icon: !_isRecording
-                      ? const Icon(Icons.radio_button_checked)
-                      : const Icon(Icons.stop)),
+                      ? const Icon(Icons.mic)
+                      : const Icon(Icons.stop_circle)),
               _isRecording
                   ? const SizedBox.shrink()
                   : const Text("Tap to start recording"),

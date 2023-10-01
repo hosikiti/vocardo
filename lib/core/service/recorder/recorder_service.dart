@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:record/record.dart';
@@ -53,11 +54,11 @@ class Recorder {
     }
   }
 
-  Future<String> stopRec() async {
+  Future<List<byte>> stopRec() async {
     await _record.stop();
     File file = File(_filePath);
     final bytes = await file.readAsBytes();
-    return base64Encode(bytes);
+    return bytes;
   }
 }
 

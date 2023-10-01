@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:isar/isar.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:vocardo/core/model/item.dart';
@@ -32,5 +34,13 @@ class CardService {
 
   Future<void> deleteCard(int id) async {
     await isar.writeTxn(() async => await isar.items.delete(id));
+  }
+
+  Future<void> updateSound(int id, List<byte> soundData) async {
+    final item = await isar.items.get(id);
+    await isar.writeTxn(() async {
+      item!.soundData = soundData;
+      await isar.items.put(item);
+    });
   }
 }

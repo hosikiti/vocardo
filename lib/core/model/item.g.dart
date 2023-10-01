@@ -26,6 +26,11 @@ const ItemSchema = CollectionSchema(
       id: 1,
       name: r'question',
       type: IsarType.string,
+    ),
+    r'soundData': PropertySchema(
+      id: 2,
+      name: r'soundData',
+      type: IsarType.byteList,
     )
   },
   estimateSize: _itemEstimateSize,
@@ -50,6 +55,7 @@ int _itemEstimateSize(
   var bytesCount = offsets.last;
   bytesCount += 3 + object.answer.length * 3;
   bytesCount += 3 + object.question.length * 3;
+  bytesCount += 3 + object.soundData.length;
   return bytesCount;
 }
 
@@ -61,6 +67,7 @@ void _itemSerialize(
 ) {
   writer.writeString(offsets[0], object.answer);
   writer.writeString(offsets[1], object.question);
+  writer.writeByteList(offsets[2], object.soundData);
 }
 
 Item _itemDeserialize(
@@ -73,6 +80,7 @@ Item _itemDeserialize(
   object.answer = reader.readString(offsets[0]);
   object.id = id;
   object.question = reader.readString(offsets[1]);
+  object.soundData = reader.readByteList(offsets[2]) ?? [];
   return object;
 }
 
@@ -87,6 +95,8 @@ P _itemDeserializeProp<P>(
       return (reader.readString(offset)) as P;
     case 1:
       return (reader.readString(offset)) as P;
+    case 2:
+      return (reader.readByteList(offset) ?? []) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -488,6 +498,143 @@ extension ItemQueryFilter on QueryBuilder<Item, Item, QFilterCondition> {
       ));
     });
   }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> soundDataElementEqualTo(
+      int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'soundData',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> soundDataElementGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'soundData',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> soundDataElementLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'soundData',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> soundDataElementBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'soundData',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> soundDataLengthEqualTo(
+      int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'soundData',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> soundDataIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'soundData',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> soundDataIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'soundData',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> soundDataLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'soundData',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> soundDataLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'soundData',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> soundDataLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'soundData',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
+    });
+  }
 }
 
 extension ItemQueryObject on QueryBuilder<Item, Item, QFilterCondition> {}
@@ -572,6 +719,12 @@ extension ItemQueryWhereDistinct on QueryBuilder<Item, Item, QDistinct> {
       return query.addDistinctBy(r'question', caseSensitive: caseSensitive);
     });
   }
+
+  QueryBuilder<Item, Item, QDistinct> distinctBySoundData() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'soundData');
+    });
+  }
 }
 
 extension ItemQueryProperty on QueryBuilder<Item, Item, QQueryProperty> {
@@ -590,6 +743,12 @@ extension ItemQueryProperty on QueryBuilder<Item, Item, QQueryProperty> {
   QueryBuilder<Item, String, QQueryOperations> questionProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'question');
+    });
+  }
+
+  QueryBuilder<Item, List<int>, QQueryOperations> soundDataProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'soundData');
     });
   }
 }
