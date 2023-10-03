@@ -5,3 +5,11 @@ Vocardo is a voice-recordable flashcard app, helping you learn a foreign languag
 ## Memo
 
 - This app's folder structure is based on this repository: https://github.com/Roaa94/movies_app
+
+## Features to be implemented
+
+- [ ] Edit card.
+- [ ] Imprement space repetition algorithm.
+- [ ] Delete card while practicing.
+- [ ] Effective practice algorithm.
+- [ ] Import/export cards as CSV.
