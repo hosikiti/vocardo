@@ -3,7 +3,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vocardo/core/service/card/current_card_provider.dart';
-import 'package:record/record.dart';
 import 'package:vocardo/core/widget/recording_dialog_widget.dart';
 
 import '../../core/service/card/card_service.dart';

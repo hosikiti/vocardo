@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:isar/isar.dart';
@@ -47,8 +46,8 @@ class Recorder {
       _filePath = '${tmpPath.path}/myFile.m4a';
       await _record.start(
         path: _filePath,
-        encoder: AudioEncoder.aacLc, // by default
-        bitRate: 32000, // by default
+        encoder: AudioEncoder.vorbisOgg, // by default
+        bitRate: 128000, // by default
         samplingRate: 44100, // by default
       );
     }

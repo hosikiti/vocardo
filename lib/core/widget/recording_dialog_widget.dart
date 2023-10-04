@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -86,7 +85,6 @@ class _RecorderPanelState extends ConsumerState<RecorderPanel> {
                         final cardService =
                             await ref.read(cardServiceProvider.future);
                         cardService.updateSound(card.id, data);
-                        print("sound updated");
                       }
                     }
 

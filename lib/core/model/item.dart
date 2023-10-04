@@ -1,6 +1,3 @@
-import 'dart:ffi';
-import 'dart:typed_data';
-
 import 'package:isar/isar.dart';
 
 part "item.g.dart";
