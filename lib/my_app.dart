@@ -144,8 +144,10 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
           FloatingActionButton(
             heroTag: "add",
             onPressed: () {
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const EditPage()));
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => const EditPage(
+                        isEdit: false,
+                      )));
             },
             tooltip: 'Add a new word',
             child: const Icon(Icons.add),

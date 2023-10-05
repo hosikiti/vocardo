@@ -3,7 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vocardo/core/service/card/card_list_provider.dart';
 
 class EditPage extends ConsumerStatefulWidget {
-  const EditPage({Key? key}) : super(key: key);
+  final bool isEdit;
+  const EditPage({Key? key, required this.isEdit}) : super(key: key);
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _EditPageState();
 }
@@ -16,7 +17,7 @@ class _EditPageState extends ConsumerState<EditPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Edit"),
+        title: Text(widget.isEdit ? "Edit" : "Add"),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
