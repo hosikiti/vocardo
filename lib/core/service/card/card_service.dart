@@ -22,9 +22,12 @@ class CardService {
     return items.map((item) => CardItem.fromModel(item)).toList();
   }
 
-  Future<Item> addCard(String question, String answer) async {
+  Future<Item> addCard(
+      {required String question,
+      required String answer,
+      List<int>? sound}) async {
     final it = Item()
-      ..soundData = null
+      ..soundData = sound
       ..question = question
       ..answer = answer;
     await isar.writeTxn(() async => await isar.items.put(it));

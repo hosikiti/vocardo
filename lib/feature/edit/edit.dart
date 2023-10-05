@@ -10,7 +10,7 @@ class EditPage extends ConsumerStatefulWidget {
 }
 
 class _EditPageState extends ConsumerState<EditPage> {
-  final promptController = TextEditingController();
+  final questionController = TextEditingController();
   final answerController = TextEditingController();
 
   @override
@@ -26,7 +26,7 @@ class _EditPageState extends ConsumerState<EditPage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             TextField(
-              controller: promptController,
+              controller: questionController,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 labelText: 'Card title',
@@ -45,12 +45,12 @@ class _EditPageState extends ConsumerState<EditPage> {
             const SizedBox(height: 16),
             ElevatedButton(
                 onPressed: () {
-                  if (promptController.text.isEmpty ||
+                  if (questionController.text.isEmpty ||
                       answerController.text.isEmpty) return;
 
                   ref
                       .read(cardListProvider.notifier)
-                      .add(promptController.text, answerController.text);
+                      .add(questionController.text, answerController.text);
                   Navigator.pop(context);
                 },
                 child: const Text("Add"))
