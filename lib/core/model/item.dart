@@ -8,5 +8,5 @@ class Item {
 
   late String question;
   late String answer;
-  late List<byte> soundData;
+  late List<byte>? soundData;
 }

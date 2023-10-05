@@ -55,7 +55,12 @@ int _itemEstimateSize(
   var bytesCount = offsets.last;
   bytesCount += 3 + object.answer.length * 3;
   bytesCount += 3 + object.question.length * 3;
-  bytesCount += 3 + object.soundData.length;
+  {
+    final value = object.soundData;
+    if (value != null) {
+      bytesCount += 3 + value.length;
+    }
+  }
   return bytesCount;
 }
 
@@ -80,7 +85,7 @@ Item _itemDeserialize(
   object.answer = reader.readString(offsets[0]);
   object.id = id;
   object.question = reader.readString(offsets[1]);
-  object.soundData = reader.readByteList(offsets[2]) ?? [];
+  object.soundData = reader.readByteList(offsets[2]);
   return object;
 }
 
@@ -96,7 +101,7 @@ P _itemDeserializeProp<P>(
     case 1:
       return (reader.readString(offset)) as P;
     case 2:
-      return (reader.readByteList(offset) ?? []) as P;
+      return (reader.readByteList(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -499,6 +504,22 @@ extension ItemQueryFilter on QueryBuilder<Item, Item, QFilterCondition> {
     });
   }
 
+  QueryBuilder<Item, Item, QAfterFilterCondition> soundDataIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'soundData',
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> soundDataIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'soundData',
+      ));
+    });
+  }
+
   QueryBuilder<Item, Item, QAfterFilterCondition> soundDataElementEqualTo(
       int value) {
     return QueryBuilder.apply(this, (query) {
@@ -746,7 +767,7 @@ extension ItemQueryProperty on QueryBuilder<Item, Item, QQueryProperty> {
     });
   }
 
-  QueryBuilder<Item, List<int>, QQueryOperations> soundDataProperty() {
+  QueryBuilder<Item, List<int>?, QQueryOperations> soundDataProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'soundData');
     });

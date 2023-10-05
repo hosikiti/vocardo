@@ -1,4 +1,3 @@
-
 import 'package:isar/isar.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:vocardo/core/model/item.dart';
@@ -25,6 +24,7 @@ class CardService {
 
   Future<Item> addCard(String question, String answer) async {
     final it = Item()
+      ..soundData = null
       ..question = question
       ..answer = answer;
     await isar.writeTxn(() async => await isar.items.put(it));
