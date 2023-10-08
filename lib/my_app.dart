@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vocardo/core/service/card/card_list_provider.dart';
 import 'package:vocardo/core/widget/dialog_widget.dart';
 import 'package:vocardo/feature/edit/edit.dart';
+import 'package:vocardo/feature/import/import.dart';
 import 'package:vocardo/feature/practice/practice.dart';
 
 class MyApp extends ConsumerWidget {
@@ -53,6 +54,31 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
         cardsRef.valueOrNull == null || cardsRef.valueOrNull!.isEmpty;
 
     return Scaffold(
+      drawer: Drawer(
+        child: ListView(
+          children: <Widget>[
+            DrawerHeader(
+              decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.inversePrimary),
+              child: const Text(
+                'Vocardo',
+                style: TextStyle(
+                  // color: Colors.white,
+                  fontSize: 24,
+                ),
+              ),
+            ),
+            ListTile(
+              title: const Text("Import Data"),
+              trailing: const Icon(Icons.arrow_forward),
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const ImportPage()));
+              },
+            ),
+          ],
+        ),
+      ),
       appBar: AppBar(
         // TRY THIS: Try changing the color here to a specific color (to
         // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
