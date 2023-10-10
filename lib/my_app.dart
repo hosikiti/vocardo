@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vocardo/core/service/card/card_list_provider.dart';
+import 'package:vocardo/core/service/card/practice_card_list_provider.dart';
 import 'package:vocardo/core/widget/dialog_widget.dart';
 import 'package:vocardo/feature/edit/edit.dart';
 import 'package:vocardo/feature/import/import.dart';
@@ -102,38 +103,45 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
         data: (cards) {
           return ListView.builder(
             itemBuilder: (context, index) {
-              return Card(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    ListTile(
-                      leading: const Icon(Icons.album),
-                      title: Text(cards[index].question),
-                      titleTextStyle: const TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 24),
-                      subtitle: Text(cards[index].answer),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: <Widget>[
-                        IconButton(
-                          icon: const Icon(Icons.delete),
-                          onPressed: () async {
-                            final yes = await showOkCancelDialog(context,
-                                title: "Delete", content: "Are you sure?");
-                            if (!yes) return;
+              return InkWell(
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) =>
+                          EditPage(initialItem: cards[index])));
+                },
+                child: Card(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      ListTile(
+                        leading: const Icon(Icons.album),
+                        title: Text(cards[index].question),
+                        titleTextStyle: const TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 24),
+                        subtitle: Text(cards[index].answer),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+                          IconButton(
+                            icon: const Icon(Icons.delete),
+                            onPressed: () async {
+                              final yes = await showOkCancelDialog(context,
+                                  title: "Delete", content: "Are you sure?");
+                              if (!yes) return;
 
-                            await ref
-                                .read(cardListProvider.notifier)
-                                .delete(cards[index]);
-                          },
-                        ),
-                        const SizedBox(width: 8),
-                      ],
-                    ),
-                  ],
+                              await ref
+                                  .read(cardListProvider.notifier)
+                                  .deleteCard(cards[index]);
+                            },
+                          ),
+                          const SizedBox(width: 8),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               );
             },
@@ -157,6 +165,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
             onPressed: noCard
                 ? null
                 : () {
+                    ref.read(practiceCardListProvider.notifier).init();
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => const PracticePage()));
                   },
@@ -169,10 +178,8 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
           FloatingActionButton(
             heroTag: "add",
             onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const EditPage(
-                        isEdit: false,
-                      )));
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => const EditPage()));
             },
             tooltip: 'Add a new word',
             child: const Icon(Icons.add),

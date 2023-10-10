@@ -28,23 +28,4 @@ class PracticeCardList extends _$PracticeCardList {
       return pickCards();
     });
   }
-
-  // Future<void> add(String question, String answer) async {
-  //   final man = await ref.read(cardServiceProvider.future);
-  //   final newItem = await man.addCard(question: question, answer: answer);
-  //   state = const AsyncLoading();
-  //   state = await AsyncValue.guard(() async {
-  //     return [...state.valueOrNull!, CardItem.fromModel(newItem)];
-  //   });
-  // }
-
-  // Future<void> delete(CardItem card) async {
-  //   final man = await ref.read(cardServiceProvider.future);
-  //   man.deleteCard(card.id);
-
-  //   state = const AsyncLoading();
-  //   state = await AsyncValue.guard(() async {
-  //     return state.valueOrNull!.where((item) => item != card).toList();
-  //   });
-  // }
 }

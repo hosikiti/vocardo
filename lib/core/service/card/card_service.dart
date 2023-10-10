@@ -38,10 +38,26 @@ class CardService {
     await isar.writeTxn(() async => await isar.items.delete(id));
   }
 
+  Future<void> updateCard(int id, String question, String answer,
+      {List<int>? sound}) async {
+    final item = await isar.items.get(id);
+    if (item == null) {
+      return;
+    }
+    await isar.writeTxn(() async {
+      item.question = question;
+      item.answer = answer;
+      await isar.items.put(item);
+    });
+  }
+
   Future<void> updateSound(int id, List<byte> soundData) async {
     final item = await isar.items.get(id);
+    if (item == null) {
+      return;
+    }
     await isar.writeTxn(() async {
-      item!.soundData = soundData;
+      item.soundData = soundData;
       await isar.items.put(item);
     });
   }

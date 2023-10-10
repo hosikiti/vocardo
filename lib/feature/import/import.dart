@@ -45,7 +45,7 @@ class _ImportPageState extends ConsumerState<ImportPage> {
             for (var line in text.split("\n")) {
               final parts = line.split(",");
               if (parts.length == 2) {
-                cardsService.add(parts[0], parts[1]);
+                cardsService.addCard(parts[0], parts[1]);
               }
             }
           }
