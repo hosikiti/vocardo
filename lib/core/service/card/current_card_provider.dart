@@ -1,5 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:vocardo/core/service/card/card_list_provider.dart';
+import 'package:vocardo/core/service/card/practice_card_list_provider.dart';
 
 part 'current_card_provider.g.dart';
 
@@ -7,7 +8,7 @@ part 'current_card_provider.g.dart';
 class CurrentCard extends _$CurrentCard {
   @override
   Future<CardItem?> build() async {
-    final cards = ref.watch(cardListProvider);
+    final cards = ref.watch(practiceCardListProvider);
 
     if (cards.valueOrNull == null) {
       return null;
@@ -16,7 +17,7 @@ class CurrentCard extends _$CurrentCard {
   }
 
   next() async {
-    final cardsRef = ref.read(cardListProvider);
+    final cardsRef = ref.read(practiceCardListProvider);
     if (state.valueOrNull == null || cardsRef.valueOrNull == null) {
       return;
     }
