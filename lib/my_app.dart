@@ -81,9 +81,6 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
         ),
       ),
       appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
@@ -109,38 +106,42 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                       builder: (context) =>
                           EditPage(initialItem: cards[index])));
                 },
-                child: Card(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      ListTile(
-                        leading: const Icon(Icons.album),
-                        title: Text(cards[index].question),
-                        titleTextStyle: const TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 24),
-                        subtitle: Text(cards[index].answer),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: <Widget>[
-                          IconButton(
-                            icon: const Icon(Icons.delete),
-                            onPressed: () async {
-                              final yes = await showOkCancelDialog(context,
-                                  title: "Delete", content: "Are you sure?");
-                              if (!yes) return;
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Card(
+                    elevation: 8,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        ListTile(
+                          leading: const Icon(Icons.circle),
+                          title: Text(cards[index].question),
+                          titleTextStyle: const TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 30),
+                          subtitle: Text(cards[index].answer),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: <Widget>[
+                            IconButton(
+                              icon: const Icon(Icons.delete),
+                              onPressed: () async {
+                                final yes = await showOkCancelDialog(context,
+                                    title: "Delete", content: "Are you sure?");
+                                if (!yes) return;
 
-                              await ref
-                                  .read(cardListProvider.notifier)
-                                  .deleteCard(cards[index]);
-                            },
-                          ),
-                          const SizedBox(width: 8),
-                        ],
-                      ),
-                    ],
+                                await ref
+                                    .read(cardListProvider.notifier)
+                                    .deleteCard(cards[index]);
+                              },
+                            ),
+                            const SizedBox(width: 8),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               );
@@ -157,35 +158,38 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
           );
         },
       ),
-      floatingActionButton: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          FloatingActionButton(
-            heroTag: "practice",
-            onPressed: noCard
-                ? null
-                : () {
-                    ref.read(practiceCardListProvider.notifier).init();
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const PracticePage()));
-                  },
-            disabledElevation: noCard ? 0 : 6,
-            foregroundColor: noCard ? Colors.grey : null,
-            tooltip: 'Practice',
-            child: const Icon(Icons.play_arrow),
-          ),
-          const SizedBox(height: 16),
-          FloatingActionButton(
-            heroTag: "add",
-            onPressed: () {
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const EditPage()));
-            },
-            tooltip: 'Add a new word',
-            child: const Icon(Icons.add),
-          )
-        ],
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              FloatingActionButton(
+                heroTag: "add",
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const EditPage()));
+                },
+                tooltip: 'Add a new word',
+                child: const Icon(Icons.add),
+              ),
+              const SizedBox(width: 8),
+              FloatingActionButton(
+                heroTag: "practice",
+                onPressed: noCard
+                    ? null
+                    : () {
+                        ref.read(practiceCardListProvider.notifier).init();
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => const PracticePage()));
+                      },
+                disabledElevation: noCard ? 0 : 6,
+                foregroundColor: noCard ? Colors.grey : null,
+                tooltip: 'Practice',
+                child: const Icon(Icons.play_arrow),
+              ),
+            ]),
+      ),
     );
   }
 }
