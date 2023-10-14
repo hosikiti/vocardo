@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vocardo/core/service/card/card_list_provider.dart';
 
@@ -45,7 +44,12 @@ class _ImportPageState extends ConsumerState<ImportPage> {
             for (var line in text.split("\n")) {
               final parts = line.split(",");
               if (parts.length == 2) {
-                cardsService.addCard(parts[0], parts[1]);
+                final question = parts[0];
+                final answer = parts[1];
+                if (question.isEmpty || answer.isEmpty) {
+                  continue;
+                }
+                cardsService.addCard(question, answer);
               }
             }
           }
