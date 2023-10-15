@@ -39,7 +39,14 @@ const ItemSchema = CollectionSchema(
   deserializeProp: _itemDeserializeProp,
   idName: r'id',
   indexes: {},
-  links: {},
+  links: {
+    r'studySet': LinkSchema(
+      id: 2985496092751510086,
+      name: r'studySet',
+      target: r'StudySet',
+      single: true,
+    )
+  },
   embeddedSchemas: {},
   getId: _itemGetId,
   getLinks: _itemGetLinks,
@@ -112,11 +119,12 @@ Id _itemGetId(Item object) {
 }
 
 List<IsarLinkBase<dynamic>> _itemGetLinks(Item object) {
-  return [];
+  return [object.studySet];
 }
 
 void _itemAttach(IsarCollection<dynamic> col, Id id, Item object) {
   object.id = id;
+  object.studySet.attach(col, col.isar.collection<StudySet>(), r'studySet', id);
 }
 
 extension ItemQueryWhereSort on QueryBuilder<Item, Item, QWhere> {
@@ -660,7 +668,20 @@ extension ItemQueryFilter on QueryBuilder<Item, Item, QFilterCondition> {
 
 extension ItemQueryObject on QueryBuilder<Item, Item, QFilterCondition> {}
 
-extension ItemQueryLinks on QueryBuilder<Item, Item, QFilterCondition> {}
+extension ItemQueryLinks on QueryBuilder<Item, Item, QFilterCondition> {
+  QueryBuilder<Item, Item, QAfterFilterCondition> studySet(
+      FilterQuery<StudySet> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.link(q, r'studySet');
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> studySetIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'studySet', 0, true, 0, true);
+    });
+  }
+}
 
 extension ItemQuerySortBy on QueryBuilder<Item, Item, QSortBy> {
   QueryBuilder<Item, Item, QAfterSortBy> sortByAnswer() {
