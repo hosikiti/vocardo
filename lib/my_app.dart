@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vocardo/core/model/study_set.dart';
-import 'package:vocardo/core/service/card/card_list_provider.dart';
-import 'package:vocardo/core/service/card/practice_card_list_provider.dart';
 import 'package:vocardo/core/service/study_set/study_set_list_provider.dart';
-import 'package:vocardo/core/widget/dialog_widget.dart';
-import 'package:vocardo/feature/edit/edit.dart';
 import 'package:vocardo/feature/import/import.dart';
-import 'package:vocardo/feature/practice/practice.dart';
 
 class MyApp extends ConsumerWidget {
   const MyApp({super.key});
