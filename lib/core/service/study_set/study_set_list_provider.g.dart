@@ -6,7 +6,7 @@ part of 'study_set_list_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$studySetListHash() => r'53a694e7dee6b1c492c51abffa41a15c61382829';
+String _$studySetListHash() => r'7329cdbb8b731df8b75aaaaa8b831c6f72c4cb47';
 
 /// See also [StudySetList].
 @ProviderFor(StudySetList)

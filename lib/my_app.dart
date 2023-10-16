@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vocardo/core/model/study_set.dart';
 import 'package:vocardo/core/service/study_set/study_set_list_provider.dart';
+import 'package:vocardo/core/widget/dialog_widget.dart';
 import 'package:vocardo/feature/card_list/card_list.dart';
 import 'package:vocardo/feature/import/import.dart';
 
@@ -96,6 +97,7 @@ class _Home extends ConsumerWidget {
                       Text(set.name,
                           style: Theme.of(context).textTheme.headlineMedium),
                       const Text(" cards"),
+                      const SizedBox(height: 16),
                       Row(
                         children: [
                           ElevatedButton.icon(
@@ -113,7 +115,15 @@ class _Home extends ConsumerWidget {
                           ),
                           const SizedBox(width: 16),
                           IconButton.filled(
-                              onPressed: () {}, icon: const Icon(Icons.edit)),
+                              onPressed: () async {
+                                final yes = await showOkCancelDialog(context,
+                                    content: "Are you sure?", title: "Delete");
+                                if (!yes) return;
+                                final studySetProvider =
+                                    ref.read(studySetListProvider.notifier);
+                                studySetProvider.deleteStudySet(set.id);
+                              },
+                              icon: const Icon(Icons.delete)),
                         ],
                       )
                     ],
@@ -211,7 +221,6 @@ class MyDrawer extends StatelessWidget {
             child: Text(
               'Vocardo',
               style: TextStyle(
-                // color: Colors.white,
                 fontSize: 24,
               ),
             ),
