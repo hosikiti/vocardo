@@ -4,50 +4,15 @@ import 'package:vocardo/core/service/card/card_list_provider.dart';
 import 'package:vocardo/core/service/card/practice_card_list_provider.dart';
 import 'package:vocardo/core/widget/dialog_widget.dart';
 import 'package:vocardo/feature/edit/edit.dart';
-import 'package:vocardo/feature/import/import.dart';
 import 'package:vocardo/feature/practice/practice.dart';
 
-class MyApp extends ConsumerWidget {
-  const MyApp({super.key});
-
-  // This widget is the root of your application.
+class CardListPage extends ConsumerStatefulWidget {
+  const CardListPage({super.key});
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Vocardo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a blue toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.orange),
-        useMaterial3: true,
-      ),
-      home: const MyHomePage(),
-    );
-  }
+  ConsumerState<CardListPage> createState() => _CardListPageState();
 }
 
-class MyHomePage extends ConsumerStatefulWidget {
-  const MyHomePage({super.key});
-
-  @override
-  ConsumerState<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends ConsumerState<MyHomePage> {
+class _CardListPageState extends ConsumerState<CardListPage> {
   @override
   Widget build(BuildContext context) {
     final cardsRef = ref.watch(cardListProvider);
@@ -55,31 +20,6 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
         cardsRef.valueOrNull == null || cardsRef.valueOrNull!.isEmpty;
 
     return Scaffold(
-      drawer: Drawer(
-        child: ListView(
-          children: <Widget>[
-            DrawerHeader(
-              decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.inversePrimary),
-              child: const Text(
-                'Vocardo',
-                style: TextStyle(
-                  // color: Colors.white,
-                  fontSize: 24,
-                ),
-              ),
-            ),
-            ListTile(
-              title: const Text("Import Data"),
-              trailing: const Icon(Icons.arrow_forward),
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const ImportPage()));
-              },
-            ),
-          ],
-        ),
-      ),
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         // Here we take the value from the MyHomePage object that was created by

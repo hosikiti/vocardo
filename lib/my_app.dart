@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vocardo/core/model/study_set.dart';
 import 'package:vocardo/core/service/study_set/study_set_list_provider.dart';
+import 'package:vocardo/feature/card_list/card_list.dart';
 import 'package:vocardo/feature/import/import.dart';
 
 class MyApp extends ConsumerWidget {
@@ -17,6 +18,8 @@ class MyApp extends ConsumerWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.orange),
         useMaterial3: true,
       ),
+      darkTheme: ThemeData.dark(),
+      themeMode: ThemeMode.dark, // TODO: make this configurable
       home: const MyHomePage(),
     );
   }
@@ -35,15 +38,13 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
     return Scaffold(
       drawer: const MyDrawer(),
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
         title: Consumer(
           builder: (context, ref, child) {
             final studySets = ref.watch(studySetListProvider);
             const empty = Text("Welcome to Vocardo");
             return studySets.when(
-                data: (sets) => sets.isEmpty ? empty : Text("${sets.length}"),
+                data: (sets) =>
+                    sets.isEmpty ? empty : const Text("Start learning!"),
                 error: (error, stackTrace) =>
                     Text("failed to load data: $error"),
                 loading: () => const CircularProgressIndicator());
@@ -83,9 +84,51 @@ class _Home extends ConsumerWidget {
       return ListView.builder(
         itemBuilder: (context, index) {
           final set = sets[index];
-          return ListTile(
-            title: Text(set.name),
-            onTap: () {},
+          return Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Card(
+                elevation: 4,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(set.name,
+                          style: Theme.of(context).textTheme.headlineMedium),
+                      const Text(" cards"),
+                      Row(
+                        children: [
+                          ElevatedButton.icon(
+                            onPressed: () {},
+                            label: const Text(
+                              "Practice",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            icon: const Icon(Icons.play_arrow,
+                                color: Color.fromRGBO(255, 255, 255, 1)),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.primary,
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          IconButton.filled(
+                              onPressed: () {}, icon: const Icon(Icons.edit)),
+                        ],
+                      )
+                    ],
+                  ),
+                )
+                // child: ListTile(
+                //   // trailing: const Icon(Icons.arrow_forward),
+                //   title: Text(set.name),
+                //   subtitle: const Text("22/34 remembered"),
+                //   onTap: () {
+                //     Navigator.of(context).push(MaterialPageRoute(
+                //         builder: (context) => const CardListPage()));
+                //   },
+                // ),
+                ),
           );
         },
         itemCount: sets.length,
@@ -164,10 +207,8 @@ class MyDrawer extends StatelessWidget {
     return Drawer(
       child: ListView(
         children: <Widget>[
-          DrawerHeader(
-            decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.inversePrimary),
-            child: const Text(
+          const DrawerHeader(
+            child: Text(
               'Vocardo',
               style: TextStyle(
                 // color: Colors.white,
