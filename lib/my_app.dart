@@ -4,6 +4,7 @@ import 'package:vocardo/core/model/study_set.dart';
 import 'package:vocardo/core/service/study_set/study_set_list_provider.dart';
 import 'package:vocardo/core/widget/dialog_widget.dart';
 import 'package:vocardo/feature/card_list/card_list.dart';
+import 'package:vocardo/feature/edit/edit.dart';
 import 'package:vocardo/feature/import/import.dart';
 
 class MyApp extends ConsumerWidget {
@@ -37,23 +38,34 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: const MyDrawer(),
-      appBar: AppBar(
-        title: Consumer(
-          builder: (context, ref, child) {
-            final studySets = ref.watch(studySetListProvider);
-            const empty = Text("Welcome to Vocardo");
-            return studySets.when(
-                data: (sets) =>
-                    sets.isEmpty ? empty : const Text("Start learning!"),
-                error: (error, stackTrace) =>
-                    Text("failed to load data: $error"),
-                loading: () => const CircularProgressIndicator());
-          },
+        drawer: const MyDrawer(),
+        appBar: AppBar(
+          title: Consumer(
+            builder: (context, ref, child) {
+              final studySets = ref.watch(studySetListProvider);
+              const empty = Text("Welcome to Vocardo");
+              return studySets.when(
+                  data: (sets) =>
+                      sets.isEmpty ? empty : const Text("Start learning!"),
+                  error: (error, stackTrace) =>
+                      Text("failed to load data: $error"),
+                  loading: () => const CircularProgressIndicator());
+            },
+          ),
         ),
-      ),
-      body: const _Home(),
-    );
+        body: const _Home(),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            showModalBottomSheet(
+                isScrollControlled: true,
+                context: context,
+                builder: (context) {
+                  return const _AddStudySetDialog();
+                });
+          },
+          tooltip: 'Add',
+          child: const Icon(Icons.add),
+        ));
   }
 }
 
@@ -96,17 +108,37 @@ class _Home extends ConsumerWidget {
                     children: [
                       Text(set.name,
                           style: Theme.of(context).textTheme.headlineMedium),
-                      const Text(" cards"),
+                      Text("${set.items.length.toString()} cards"),
                       const SizedBox(height: 16),
                       Row(
                         children: [
                           ElevatedButton.icon(
                             onPressed: () {},
                             label: const Text(
-                              "Practice",
+                              "PRACTICE",
                               style: TextStyle(color: Colors.white),
                             ),
                             icon: const Icon(Icons.play_arrow,
+                                color: Color.fromRGBO(255, 255, 255, 1)),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.primary,
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          ElevatedButton.icon(
+                            onPressed: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => EditPage(
+                                  studySet: set,
+                                ),
+                              ));
+                            },
+                            label: const Text(
+                              "ADD",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            icon: const Icon(Icons.add,
                                 color: Color.fromRGBO(255, 255, 255, 1)),
                             style: ElevatedButton.styleFrom(
                               backgroundColor:
@@ -128,17 +160,7 @@ class _Home extends ConsumerWidget {
                       )
                     ],
                   ),
-                )
-                // child: ListTile(
-                //   // trailing: const Icon(Icons.arrow_forward),
-                //   title: Text(set.name),
-                //   subtitle: const Text("22/34 remembered"),
-                //   onTap: () {
-                //     Navigator.of(context).push(MaterialPageRoute(
-                //         builder: (context) => const CardListPage()));
-                //   },
-                // ),
-                ),
+                )),
           );
         },
         itemCount: sets.length,

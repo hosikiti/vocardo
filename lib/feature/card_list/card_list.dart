@@ -42,9 +42,9 @@ class _CardListPageState extends ConsumerState<CardListPage> {
             itemBuilder: (context, index) {
               return InkWell(
                 onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) =>
-                          EditPage(initialItem: cards[index])));
+                  // Navigator.of(context).push(MaterialPageRoute(
+                  //     builder: (context) =>
+                  //         EditPage(initialItem: cards[index])));
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -107,8 +107,8 @@ class _CardListPageState extends ConsumerState<CardListPage> {
               FloatingActionButton(
                 heroTag: "add",
                 onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const EditPage()));
+                  // Navigator.of(context).push(MaterialPageRoute(
+                  //     builder: (context) => const EditPage()));
                 },
                 tooltip: 'Add a new word',
                 child: const Icon(Icons.add),

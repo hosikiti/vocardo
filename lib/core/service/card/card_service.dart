@@ -1,6 +1,7 @@
 import 'package:isar/isar.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:vocardo/core/model/item.dart';
+import 'package:vocardo/core/model/study_set.dart';
 import 'package:vocardo/core/service/card/card_list_provider.dart';
 import 'package:vocardo/core/service/isar/isar_service.dart';
 
@@ -23,14 +24,20 @@ class CardService {
   }
 
   Future<Item> addCard(
-      {required String question,
+      {required StudySet studySet,
+      required String question,
       required String answer,
       List<int>? sound}) async {
     final it = Item()
+      ..studySet.value = studySet
       ..soundData = sound
       ..question = question
       ..answer = answer;
-    await isar.writeTxn(() async => await isar.items.put(it));
+    // await it.studySet.save();
+    await isar.writeTxn(() async {
+      await isar.items.put(it);
+      await it.studySet.save();
+    });
     return it;
   }
 

@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:vocardo/core/model/study_set.dart';
 import 'package:vocardo/core/service/card/card_list_provider.dart';
+import 'package:vocardo/core/service/card/card_service.dart';
 
 class EditPage extends ConsumerStatefulWidget {
   final CardItem? initialItem;
+  final StudySet studySet;
   const EditPage({
     Key? key,
+    required this.studySet,
     this.initialItem,
   }) : super(key: key);
   @override
@@ -88,7 +92,9 @@ class _EditPageState extends ConsumerState<EditPage> {
 
       cards.updateCard(card);
     } else {
-      cards.addCard(question, answer);
+      final cardService = await ref.read(cardServiceProvider.future);
+      cardService.addCard(
+          studySet: widget.studySet, question: question, answer: answer);
     }
   }
 }

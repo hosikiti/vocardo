@@ -49,7 +49,7 @@ class _ImportPageState extends ConsumerState<ImportPage> {
                 if (question.isEmpty || answer.isEmpty) {
                   continue;
                 }
-                cardsService.addCard(question, answer);
+                // cardsService.addCard(question, answer);
               }
             }
           }

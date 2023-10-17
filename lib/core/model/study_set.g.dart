@@ -29,7 +29,15 @@ const StudySetSchema = CollectionSchema(
   deserializeProp: _studySetDeserializeProp,
   idName: r'id',
   indexes: {},
-  links: {},
+  links: {
+    r'items': LinkSchema(
+      id: 4124715547297554163,
+      name: r'items',
+      target: r'Item',
+      single: false,
+      linkName: r'studySet',
+    )
+  },
   embeddedSchemas: {},
   getId: _studySetGetId,
   getLinks: _studySetGetLinks,
@@ -87,11 +95,12 @@ Id _studySetGetId(StudySet object) {
 }
 
 List<IsarLinkBase<dynamic>> _studySetGetLinks(StudySet object) {
-  return [];
+  return [object.items];
 }
 
 void _studySetAttach(IsarCollection<dynamic> col, Id id, StudySet object) {
   object.id = id;
+  object.items.attach(col, col.isar.collection<Item>(), r'items', id);
 }
 
 extension StudySetQueryWhereSort on QueryBuilder<StudySet, StudySet, QWhere> {
@@ -358,7 +367,64 @@ extension StudySetQueryObject
     on QueryBuilder<StudySet, StudySet, QFilterCondition> {}
 
 extension StudySetQueryLinks
-    on QueryBuilder<StudySet, StudySet, QFilterCondition> {}
+    on QueryBuilder<StudySet, StudySet, QFilterCondition> {
+  QueryBuilder<StudySet, StudySet, QAfterFilterCondition> items(
+      FilterQuery<Item> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.link(q, r'items');
+    });
+  }
+
+  QueryBuilder<StudySet, StudySet, QAfterFilterCondition> itemsLengthEqualTo(
+      int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'items', length, true, length, true);
+    });
+  }
+
+  QueryBuilder<StudySet, StudySet, QAfterFilterCondition> itemsIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'items', 0, true, 0, true);
+    });
+  }
+
+  QueryBuilder<StudySet, StudySet, QAfterFilterCondition> itemsIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'items', 0, false, 999999, true);
+    });
+  }
+
+  QueryBuilder<StudySet, StudySet, QAfterFilterCondition> itemsLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'items', 0, true, length, include);
+    });
+  }
+
+  QueryBuilder<StudySet, StudySet, QAfterFilterCondition>
+      itemsLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'items', length, include, 999999, true);
+    });
+  }
+
+  QueryBuilder<StudySet, StudySet, QAfterFilterCondition> itemsLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(
+          r'items', lower, includeLower, upper, includeUpper);
+    });
+  }
+}
 
 extension StudySetQuerySortBy on QueryBuilder<StudySet, StudySet, QSortBy> {
   QueryBuilder<StudySet, StudySet, QAfterSortBy> sortByName() {
