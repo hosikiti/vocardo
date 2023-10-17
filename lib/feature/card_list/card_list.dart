@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vocardo/core/service/card/card_list_provider.dart';
 import 'package:vocardo/core/service/card/practice_card_list_provider.dart';
 import 'package:vocardo/core/widget/dialog_widget.dart';
-import 'package:vocardo/feature/edit/edit.dart';
 import 'package:vocardo/feature/practice/practice.dart';
 
 class CardListPage extends ConsumerStatefulWidget {

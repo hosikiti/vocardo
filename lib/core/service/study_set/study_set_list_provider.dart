@@ -10,20 +10,6 @@ part 'study_set_list_provider.g.dart';
 
 @riverpod
 class StudySetList extends _$StudySetList {
-  // @override
-  // Future<Stream<List<StudySet>>> build() async {
-  //   final db = await ref.read(isarProvider.future);
-  //   // return db.studySets.where().findAll();
-  //   return db.studySets.watchLazy(fireImmediately: true);
-  //   // return db.studySets.where().findAll().then(
-  //   //   (sets) async {
-  //   //     for (final set in sets) {
-  //   //       await set.items.load();
-  //   //     }
-  //   //     return sets;
-  //   //   },
-  //   // );
-  // }
   @override
   Stream<List<StudySet>> build() async* {
     final db = await ref.read(isarProvider.future);

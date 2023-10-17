@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vocardo/core/model/study_set.dart';
 import 'package:vocardo/core/service/study_set/study_set_list_provider.dart';
 import 'package:vocardo/core/widget/dialog_widget.dart';
-import 'package:vocardo/feature/card_list/card_list.dart';
 import 'package:vocardo/feature/edit/edit.dart';
 import 'package:vocardo/feature/import/import.dart';
 
@@ -108,6 +107,7 @@ class _Home extends ConsumerWidget {
                     children: [
                       Text(set.name,
                           style: Theme.of(context).textTheme.headlineMedium),
+                      const SizedBox(height: 16),
                       Text("${set.items.length.toString()} cards"),
                       const SizedBox(height: 16),
                       Row(
