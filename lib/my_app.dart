@@ -20,7 +20,7 @@ class MyApp extends ConsumerWidget {
         useMaterial3: true,
       ),
       darkTheme: ThemeData.dark(),
-      themeMode: ThemeMode.dark, // TODO: make this configurable
+      themeMode: ThemeMode.system,
       home: const MyHomePage(),
     );
   }
