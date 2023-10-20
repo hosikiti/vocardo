@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vocardo/core/service/card/card_list_provider.dart';
 import 'package:vocardo/core/service/card/practice_card_list_provider.dart';
+import 'package:vocardo/core/service/study_set/current_study_set_provider.dart';
 import 'package:vocardo/core/widget/dialog_widget.dart';
+import 'package:vocardo/feature/edit/edit.dart';
 import 'package:vocardo/feature/practice/practice.dart';
 
 class CardListPage extends ConsumerStatefulWidget {
@@ -20,9 +22,6 @@ class _CardListPageState extends ConsumerState<CardListPage> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
         title: Consumer(
           builder: (context, ref, child) {
             final cardsRef = ref.watch(cardListProvider);
@@ -56,9 +55,7 @@ class _CardListPageState extends ConsumerState<CardListPage> {
                           leading: const Icon(Icons.circle),
                           title: Text(cards[index].question),
                           titleTextStyle: const TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 30),
+                              fontWeight: FontWeight.bold, fontSize: 30),
                           subtitle: Text(cards[index].answer),
                         ),
                         Row(
@@ -106,8 +103,9 @@ class _CardListPageState extends ConsumerState<CardListPage> {
               FloatingActionButton(
                 heroTag: "add",
                 onPressed: () {
-                  // Navigator.of(context).push(MaterialPageRoute(
-                  //     builder: (context) => const EditPage()));
+                  final set = ref.read(currentStudySetProvider);
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => EditPage(studySet: set)));
                 },
                 tooltip: 'Add a new word',
                 child: const Icon(Icons.add),

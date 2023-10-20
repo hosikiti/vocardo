@@ -18,8 +18,11 @@ class CardService {
 
   CardService(this.isar);
 
-  Future<List<CardItem>> getAll() async {
-    final items = await isar.items.where().findAll();
+  Future<List<CardItem>> getAll(int studySetId) async {
+    final items = await isar.items
+        .filter()
+        .studySet((q) => q.idEqualTo(studySetId))
+        .findAll();
     return items.map((item) => CardItem.fromModel(item)).toList();
   }
 
@@ -33,7 +36,6 @@ class CardService {
       ..soundData = sound
       ..question = question
       ..answer = answer;
-    // await it.studySet.save();
     await isar.writeTxn(() async {
       await isar.items.put(it);
       await it.studySet.save();

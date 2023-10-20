@@ -1,6 +1,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:vocardo/core/service/card/card_list_provider.dart';
 import 'package:vocardo/core/service/card/card_service.dart';
+import 'package:vocardo/core/service/study_set/current_study_set_provider.dart';
 
 part 'practice_card_list_provider.g.dart';
 
@@ -13,8 +14,9 @@ class PracticeCardList extends _$PracticeCardList {
 
   Future<List<CardItem>> pickCards() async {
     final man = await ref.read(cardServiceProvider.future);
+    final set = ref.watch(currentStudySetProvider);
 
-    final card = await man.getAll();
+    final card = await man.getAll(set.id);
 
     // pick 10 random cards
     final random = card.toList()..shuffle();

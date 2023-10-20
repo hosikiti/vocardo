@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vocardo/core/model/study_set.dart';
+import 'package:vocardo/core/service/study_set/current_study_set_provider.dart';
 import 'package:vocardo/core/service/study_set/study_set_list_provider.dart';
 import 'package:vocardo/core/widget/dialog_widget.dart';
+import 'package:vocardo/feature/card_list/card_list.dart';
 import 'package:vocardo/feature/edit/edit.dart';
 import 'package:vocardo/feature/import/import.dart';
 
@@ -98,69 +100,78 @@ class _Home extends ConsumerWidget {
           final set = sets[index];
           return Padding(
             padding: const EdgeInsets.all(16.0),
-            child: Card(
-                elevation: 4,
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(set.name,
-                          style: Theme.of(context).textTheme.headlineMedium),
-                      const SizedBox(height: 16),
-                      Text("${set.items.length.toString()} cards"),
-                      const SizedBox(height: 16),
-                      Row(
-                        children: [
-                          ElevatedButton.icon(
-                            onPressed: () {},
-                            label: const Text(
-                              "PRACTICE",
-                              style: TextStyle(color: Colors.white),
+            child: InkWell(
+              onTap: () {
+                ref.read(currentStudySetProvider.notifier).setStudySetId(set);
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => const CardListPage(),
+                ));
+              },
+              child: Card(
+                  elevation: 4,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(set.name,
+                            style: Theme.of(context).textTheme.headlineMedium),
+                        const SizedBox(height: 16),
+                        Text("${set.items.length.toString()} cards"),
+                        const SizedBox(height: 16),
+                        Row(
+                          children: [
+                            ElevatedButton.icon(
+                              onPressed: () {},
+                              label: const Text(
+                                "PRACTICE",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              icon: const Icon(Icons.play_arrow,
+                                  color: Color.fromRGBO(255, 255, 255, 1)),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor:
+                                    Theme.of(context).colorScheme.primary,
+                              ),
                             ),
-                            icon: const Icon(Icons.play_arrow,
-                                color: Color.fromRGBO(255, 255, 255, 1)),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                  Theme.of(context).colorScheme.primary,
-                            ),
-                          ),
-                          const SizedBox(width: 16),
-                          ElevatedButton.icon(
-                            onPressed: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => EditPage(
-                                  studySet: set,
-                                ),
-                              ));
-                            },
-                            label: const Text(
-                              "ADD",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                            icon: const Icon(Icons.add,
-                                color: Color.fromRGBO(255, 255, 255, 1)),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                  Theme.of(context).colorScheme.primary,
-                            ),
-                          ),
-                          const SizedBox(width: 16),
-                          IconButton.filled(
-                              onPressed: () async {
-                                final yes = await showOkCancelDialog(context,
-                                    content: "Are you sure?", title: "Delete");
-                                if (!yes) return;
-                                final studySetProvider =
-                                    ref.read(studySetListProvider.notifier);
-                                studySetProvider.deleteStudySet(set.id);
+                            const SizedBox(width: 16),
+                            ElevatedButton.icon(
+                              onPressed: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => EditPage(
+                                    studySet: set,
+                                  ),
+                                ));
                               },
-                              icon: const Icon(Icons.delete)),
-                        ],
-                      )
-                    ],
-                  ),
-                )),
+                              label: const Text(
+                                "ADD",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              icon: const Icon(Icons.add,
+                                  color: Color.fromRGBO(255, 255, 255, 1)),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor:
+                                    Theme.of(context).colorScheme.primary,
+                              ),
+                            ),
+                            const SizedBox(width: 16),
+                            IconButton.filled(
+                                onPressed: () async {
+                                  final yes = await showOkCancelDialog(context,
+                                      content: "Are you sure?",
+                                      title: "Delete");
+                                  if (!yes) return;
+                                  final studySetProvider =
+                                      ref.read(studySetListProvider.notifier);
+                                  studySetProvider.deleteStudySet(set.id);
+                                },
+                                icon: const Icon(Icons.delete)),
+                          ],
+                        )
+                      ],
+                    ),
+                  )),
+            ),
           );
         },
         itemCount: sets.length,

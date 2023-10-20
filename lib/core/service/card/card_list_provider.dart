@@ -1,6 +1,10 @@
+import 'package:isar/isar.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:vocardo/core/model/item.dart';
+import 'package:vocardo/core/model/study_set.dart';
 import 'package:vocardo/core/service/card/card_service.dart';
+import 'package:vocardo/core/service/isar/isar_service.dart';
+import 'package:vocardo/core/service/study_set/current_study_set_provider.dart';
 
 part 'card_list_provider.g.dart';
 
@@ -20,20 +24,16 @@ class CardItem {
 @Riverpod(keepAlive: true)
 class CardList extends _$CardList {
   @override
-  Future<List<CardItem>> build() async {
-    final man = await ref.read(cardServiceProvider.future);
-
-    return man.getAll();
+  Stream<List<CardItem>> build() async* {
+    final cardService = await ref.read(cardServiceProvider.future);
+    final set = ref.watch(currentStudySetProvider);
+    final db = await ref.read(isarProvider.future);
+    final query =
+        db.items.filter().studySet((q) => q.idEqualTo(set.id)).build();
+    await for (final _ in query.watchLazy(fireImmediately: true)) {
+      yield await cardService.getAll(set.id);
+    }
   }
-
-  // Future<void> addCard(int studySetId,  String question, String answer) async {
-  //   final man = await ref.read(cardServiceProvider.future);
-  //   final newItem = await man.addCard(question: question, answer: answer);
-  //   state = const AsyncLoading();
-  //   state = await AsyncValue.guard(() async {
-  //     return [...state.valueOrNull!, CardItem.fromModel(newItem)];
-  //   });
-  // }
 
   Future<void> deleteCard(CardItem card) async {
     state = const AsyncLoading();
