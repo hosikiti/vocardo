@@ -48,33 +48,51 @@ class _CardListPageState extends ConsumerState<CardListPage> {
                   padding: const EdgeInsets.all(8.0),
                   child: Card(
                     elevation: 8,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        ListTile(
-                          leading: const Icon(Icons.circle),
-                          title: Text(cards[index].question),
-                          titleTextStyle: const TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 30),
-                          subtitle: Text(cards[index].answer),
+                    child: Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.circle,
+                                  color: Theme.of(context).colorScheme.shadow,
+                                )
+                              ]),
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: <Widget>[
-                            IconButton(
-                              icon: const Icon(Icons.delete),
-                              onPressed: () async {
-                                final yes = await showOkCancelDialog(context,
-                                    title: "Delete", content: "Are you sure?");
-                                if (!yes) return;
+                        Expanded(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              ListTile(
+                                title: Text(cards[index].question),
+                                titleTextStyle: const TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 30),
+                                subtitle: Text(cards[index].answer),
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: <Widget>[
+                                  IconButton(
+                                    icon: const Icon(Icons.delete),
+                                    onPressed: () async {
+                                      final yes = await showOkCancelDialog(
+                                          context,
+                                          title: "Delete",
+                                          content: "Are you sure?");
+                                      if (!yes) return;
 
-                                await ref
-                                    .read(cardListProvider.notifier)
-                                    .deleteCard(cards[index]);
-                              },
-                            ),
-                            const SizedBox(width: 8),
-                          ],
+                                      await ref
+                                          .read(cardListProvider.notifier)
+                                          .deleteCard(cards[index]);
+                                    },
+                                  ),
+                                  const SizedBox(width: 8),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
@@ -110,7 +128,7 @@ class _CardListPageState extends ConsumerState<CardListPage> {
                 tooltip: 'Add a new word',
                 child: const Icon(Icons.add),
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: 16),
               FloatingActionButton(
                 heroTag: "practice",
                 onPressed: noCard
