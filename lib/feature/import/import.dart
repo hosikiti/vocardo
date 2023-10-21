@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vocardo/core/service/card/card_list_provider.dart';
+import 'package:vocardo/core/service/card/card_service.dart';
+import 'package:vocardo/core/service/study_set/current_study_set_provider.dart';
 
 class ImportPage extends ConsumerStatefulWidget {
   const ImportPage({Key? key}) : super(key: key);
@@ -36,10 +38,11 @@ class _ImportPageState extends ConsumerState<ImportPage> {
           ),
           BottomNavigationBarItem(icon: Icon(Icons.check), label: "Cancel"),
         ],
-        onTap: (value) {
+        onTap: (value) async {
           final text = _textController.text;
           if (value == 0) {
-            final cardsService = ref.read(cardListProvider.notifier);
+            final studySet = ref.read(currentStudySetProvider);
+            final cardService = await ref.read(cardServiceProvider.future);
 
             for (var line in text.split("\n")) {
               final parts = line.split(",");
@@ -49,12 +52,14 @@ class _ImportPageState extends ConsumerState<ImportPage> {
                 if (question.isEmpty || answer.isEmpty) {
                   continue;
                 }
-                // cardsService.addCard(question, answer);
+                cardService.addCard(
+                    studySet: studySet, question: question, answer: answer);
               }
             }
+            if (mounted) {
+              Navigator.of(context).pop();
+            }
           }
-
-          Navigator.pop(context);
         },
       ),
     );

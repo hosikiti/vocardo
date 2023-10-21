@@ -6,6 +6,7 @@ import 'package:vocardo/core/service/card/practice_card_list_provider.dart';
 import 'package:vocardo/core/service/study_set/current_study_set_provider.dart';
 import 'package:vocardo/core/widget/dialog_widget.dart';
 import 'package:vocardo/feature/edit/edit.dart';
+import 'package:vocardo/feature/import/import.dart';
 import 'package:vocardo/feature/practice/practice.dart';
 
 class CardListPage extends ConsumerStatefulWidget {
@@ -34,6 +35,23 @@ class _CardListPageState extends ConsumerState<CardListPage> {
                 loading: () => const CircularProgressIndicator());
           },
         ),
+        actions: [
+          PopupMenuButton<String>(
+            itemBuilder: (BuildContext context) {
+              return [
+                PopupMenuItem(
+                  value: "import",
+                  child: const Text("Import CSV"),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const ImportPage()));
+                  },
+                ),
+              ];
+            },
+          )
+        ],
       ),
       body: cardsRef.when(
         data: (cards) {

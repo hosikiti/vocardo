@@ -249,22 +249,14 @@ class MyDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Drawer(
       child: ListView(
-        children: <Widget>[
-          const DrawerHeader(
+        children: const <Widget>[
+          DrawerHeader(
             child: Text(
               'Vocardo',
               style: TextStyle(
                 fontSize: 24,
               ),
             ),
-          ),
-          ListTile(
-            title: const Text("Import Data"),
-            trailing: const Icon(Icons.arrow_forward),
-            onTap: () {
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const ImportPage()));
-            },
           ),
         ],
       ),
