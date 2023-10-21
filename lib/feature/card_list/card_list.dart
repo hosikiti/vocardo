@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:vocardo/core/model/study_set.dart';
 import 'package:vocardo/core/service/card/card_list_provider.dart';
 import 'package:vocardo/core/service/card/practice_card_list_provider.dart';
 import 'package:vocardo/core/service/study_set/current_study_set_provider.dart';
@@ -40,9 +41,10 @@ class _CardListPageState extends ConsumerState<CardListPage> {
             itemBuilder: (context, index) {
               return InkWell(
                 onTap: () {
-                  // Navigator.of(context).push(MaterialPageRoute(
-                  //     builder: (context) =>
-                  //         EditPage(initialItem: cards[index])));
+                  final studySet = ref.read(currentStudySetProvider);
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => EditPage(
+                          studySet: studySet, initialItem: cards[index])));
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
