@@ -4,6 +4,7 @@ import 'package:vocardo/core/model/study_set.dart';
 import 'package:vocardo/core/service/card/card_list_provider.dart';
 import 'package:vocardo/core/service/card/practice_card_list_provider.dart';
 import 'package:vocardo/core/service/study_set/current_study_set_provider.dart';
+import 'package:vocardo/core/util/text_util.dart';
 import 'package:vocardo/core/widget/dialog_widget.dart';
 import 'package:vocardo/feature/edit/edit.dart';
 import 'package:vocardo/feature/import/import.dart';
@@ -29,8 +30,9 @@ class _CardListPageState extends ConsumerState<CardListPage> {
             final cardsRef = ref.watch(cardListProvider);
             const noCards = Text("No cards yet!");
             return cardsRef.when(
-                data: (cards) =>
-                    cards.isNotEmpty ? Text("${cards.length} cards") : noCards,
+                data: (cards) => cards.isNotEmpty
+                    ? Text("${cards.length} ${cardOrCards(cards.length)}")
+                    : noCards,
                 error: (_, __) => noCards,
                 loading: () => const CircularProgressIndicator());
           },
