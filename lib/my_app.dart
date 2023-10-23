@@ -7,7 +7,6 @@ import 'package:vocardo/core/util/text_util.dart';
 import 'package:vocardo/core/widget/dialog_widget.dart';
 import 'package:vocardo/feature/card_list/card_list.dart';
 import 'package:vocardo/feature/edit/edit.dart';
-import 'package:vocardo/feature/import/import.dart';
 
 class MyApp extends ConsumerWidget {
   const MyApp({super.key});
