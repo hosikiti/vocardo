@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vocardo/core/service/card/current_card_provider.dart';
+import 'package:vocardo/core/util/repetition_util.dart';
 import 'package:vocardo/core/widget/recording_dialog_widget.dart';
 
 import '../../core/service/card/card_service.dart';
@@ -92,14 +93,18 @@ class _PracticePageState extends ConsumerState<PracticePage> {
                 children: [
                   Expanded(
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        setCardNewInterval(1);
+                      },
                       child: const Text("HARD"),
                     ),
                   ),
                   const SizedBox(width: 16),
                   Expanded(
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        setCardNewInterval(3);
+                      },
                       child: const Text("OK"),
                     ),
                   ),
@@ -107,10 +112,7 @@ class _PracticePageState extends ConsumerState<PracticePage> {
                   Expanded(
                     child: ElevatedButton(
                       onPressed: () {
-                        ref.read(currentCardProvider.notifier).next();
-                        setState(() {
-                          showAnswer = false;
-                        });
+                        setCardNewInterval(5);
                       },
                       child: const Text("EASY"),
                     ),
@@ -120,5 +122,49 @@ class _PracticePageState extends ConsumerState<PracticePage> {
             )
           ]),
         ));
+  }
+
+  void setCardNewInterval(int quality) async {
+    final currentCard = ref.read(currentCardProvider);
+    final card = currentCard.valueOrNull;
+    if (card == null) {
+      return;
+    }
+
+    final cardService = await ref.read(cardServiceProvider.future);
+    final item = await cardService.getItem(card.id);
+    if (item == null) {
+      return;
+    }
+
+    final rep = calculateRepetationInterval(
+        repeatCount: (item.repetition ?? 0) + 1,
+        quality: quality,
+        lastEasinessFactor: item.easinessFactor,
+        lastIntervalDays: item.interval);
+
+    DateTime reviewAfter =
+        DateTime.now().add(Duration(days: rep.nextIntervalDays));
+
+    await cardService.updateCardRepetition(
+      card.id,
+      repetition: rep.repeatCount,
+      easinessFactor: rep.lastEasinessFactor,
+      interval: rep.nextIntervalDays,
+      quality: quality,
+      reviewAfter: reviewAfter,
+    );
+
+    if (ref.read(currentCardProvider.notifier).isLast()) {
+      if (!mounted) {
+        return;
+      }
+      Navigator.of(context).pop();
+    }
+
+    ref.read(currentCardProvider.notifier).next();
+    setState(() {
+      showAnswer = false;
+    });
   }
 }

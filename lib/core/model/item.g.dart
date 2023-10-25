@@ -22,13 +22,43 @@ const ItemSchema = CollectionSchema(
       name: r'answer',
       type: IsarType.string,
     ),
-    r'question': PropertySchema(
+    r'easinessFactor': PropertySchema(
       id: 1,
+      name: r'easinessFactor',
+      type: IsarType.double,
+    ),
+    r'interval': PropertySchema(
+      id: 2,
+      name: r'interval',
+      type: IsarType.long,
+    ),
+    r'lastInterval': PropertySchema(
+      id: 3,
+      name: r'lastInterval',
+      type: IsarType.long,
+    ),
+    r'quality': PropertySchema(
+      id: 4,
+      name: r'quality',
+      type: IsarType.long,
+    ),
+    r'question': PropertySchema(
+      id: 5,
       name: r'question',
       type: IsarType.string,
     ),
+    r'repetition': PropertySchema(
+      id: 6,
+      name: r'repetition',
+      type: IsarType.long,
+    ),
+    r'reviewAfter': PropertySchema(
+      id: 7,
+      name: r'reviewAfter',
+      type: IsarType.dateTime,
+    ),
     r'soundData': PropertySchema(
-      id: 2,
+      id: 8,
       name: r'soundData',
       type: IsarType.byteList,
     )
@@ -78,8 +108,14 @@ void _itemSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeString(offsets[0], object.answer);
-  writer.writeString(offsets[1], object.question);
-  writer.writeByteList(offsets[2], object.soundData);
+  writer.writeDouble(offsets[1], object.easinessFactor);
+  writer.writeLong(offsets[2], object.interval);
+  writer.writeLong(offsets[3], object.lastInterval);
+  writer.writeLong(offsets[4], object.quality);
+  writer.writeString(offsets[5], object.question);
+  writer.writeLong(offsets[6], object.repetition);
+  writer.writeDateTime(offsets[7], object.reviewAfter);
+  writer.writeByteList(offsets[8], object.soundData);
 }
 
 Item _itemDeserialize(
@@ -90,9 +126,15 @@ Item _itemDeserialize(
 ) {
   final object = Item();
   object.answer = reader.readString(offsets[0]);
+  object.easinessFactor = reader.readDoubleOrNull(offsets[1]);
   object.id = id;
-  object.question = reader.readString(offsets[1]);
-  object.soundData = reader.readByteList(offsets[2]);
+  object.interval = reader.readLongOrNull(offsets[2]);
+  object.lastInterval = reader.readLongOrNull(offsets[3]);
+  object.quality = reader.readLongOrNull(offsets[4]);
+  object.question = reader.readString(offsets[5]);
+  object.repetition = reader.readLongOrNull(offsets[6]);
+  object.reviewAfter = reader.readDateTimeOrNull(offsets[7]);
+  object.soundData = reader.readByteList(offsets[8]);
   return object;
 }
 
@@ -106,8 +148,20 @@ P _itemDeserializeProp<P>(
     case 0:
       return (reader.readString(offset)) as P;
     case 1:
-      return (reader.readString(offset)) as P;
+      return (reader.readDoubleOrNull(offset)) as P;
     case 2:
+      return (reader.readLongOrNull(offset)) as P;
+    case 3:
+      return (reader.readLongOrNull(offset)) as P;
+    case 4:
+      return (reader.readLongOrNull(offset)) as P;
+    case 5:
+      return (reader.readString(offset)) as P;
+    case 6:
+      return (reader.readLongOrNull(offset)) as P;
+    case 7:
+      return (reader.readDateTimeOrNull(offset)) as P;
+    case 8:
       return (reader.readByteList(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -331,6 +385,84 @@ extension ItemQueryFilter on QueryBuilder<Item, Item, QFilterCondition> {
     });
   }
 
+  QueryBuilder<Item, Item, QAfterFilterCondition> easinessFactorIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'easinessFactor',
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> easinessFactorIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'easinessFactor',
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> easinessFactorEqualTo(
+    double? value, {
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'easinessFactor',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> easinessFactorGreaterThan(
+    double? value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'easinessFactor',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> easinessFactorLessThan(
+    double? value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'easinessFactor',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> easinessFactorBetween(
+    double? lower,
+    double? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'easinessFactor',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
   QueryBuilder<Item, Item, QAfterFilterCondition> idEqualTo(Id value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -375,6 +507,211 @@ extension ItemQueryFilter on QueryBuilder<Item, Item, QFilterCondition> {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
         property: r'id',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> intervalIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'interval',
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> intervalIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'interval',
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> intervalEqualTo(int? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'interval',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> intervalGreaterThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'interval',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> intervalLessThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'interval',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> intervalBetween(
+    int? lower,
+    int? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'interval',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> lastIntervalIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'lastInterval',
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> lastIntervalIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'lastInterval',
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> lastIntervalEqualTo(
+      int? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'lastInterval',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> lastIntervalGreaterThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'lastInterval',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> lastIntervalLessThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'lastInterval',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> lastIntervalBetween(
+    int? lower,
+    int? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'lastInterval',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> qualityIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'quality',
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> qualityIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'quality',
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> qualityEqualTo(int? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'quality',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> qualityGreaterThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'quality',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> qualityLessThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'quality',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> qualityBetween(
+    int? lower,
+    int? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'quality',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -508,6 +845,144 @@ extension ItemQueryFilter on QueryBuilder<Item, Item, QFilterCondition> {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'question',
         value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> repetitionIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'repetition',
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> repetitionIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'repetition',
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> repetitionEqualTo(
+      int? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'repetition',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> repetitionGreaterThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'repetition',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> repetitionLessThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'repetition',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> repetitionBetween(
+    int? lower,
+    int? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'repetition',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> reviewAfterIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'reviewAfter',
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> reviewAfterIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'reviewAfter',
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> reviewAfterEqualTo(
+      DateTime? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'reviewAfter',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> reviewAfterGreaterThan(
+    DateTime? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'reviewAfter',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> reviewAfterLessThan(
+    DateTime? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'reviewAfter',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> reviewAfterBetween(
+    DateTime? lower,
+    DateTime? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'reviewAfter',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
       ));
     });
   }
@@ -696,6 +1171,54 @@ extension ItemQuerySortBy on QueryBuilder<Item, Item, QSortBy> {
     });
   }
 
+  QueryBuilder<Item, Item, QAfterSortBy> sortByEasinessFactor() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'easinessFactor', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterSortBy> sortByEasinessFactorDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'easinessFactor', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterSortBy> sortByInterval() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'interval', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterSortBy> sortByIntervalDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'interval', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterSortBy> sortByLastInterval() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'lastInterval', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterSortBy> sortByLastIntervalDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'lastInterval', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterSortBy> sortByQuality() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'quality', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterSortBy> sortByQualityDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'quality', Sort.desc);
+    });
+  }
+
   QueryBuilder<Item, Item, QAfterSortBy> sortByQuestion() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'question', Sort.asc);
@@ -705,6 +1228,30 @@ extension ItemQuerySortBy on QueryBuilder<Item, Item, QSortBy> {
   QueryBuilder<Item, Item, QAfterSortBy> sortByQuestionDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'question', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterSortBy> sortByRepetition() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'repetition', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterSortBy> sortByRepetitionDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'repetition', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterSortBy> sortByReviewAfter() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'reviewAfter', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterSortBy> sortByReviewAfterDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'reviewAfter', Sort.desc);
     });
   }
 }
@@ -722,6 +1269,18 @@ extension ItemQuerySortThenBy on QueryBuilder<Item, Item, QSortThenBy> {
     });
   }
 
+  QueryBuilder<Item, Item, QAfterSortBy> thenByEasinessFactor() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'easinessFactor', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterSortBy> thenByEasinessFactorDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'easinessFactor', Sort.desc);
+    });
+  }
+
   QueryBuilder<Item, Item, QAfterSortBy> thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
@@ -731,6 +1290,42 @@ extension ItemQuerySortThenBy on QueryBuilder<Item, Item, QSortThenBy> {
   QueryBuilder<Item, Item, QAfterSortBy> thenByIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterSortBy> thenByInterval() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'interval', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterSortBy> thenByIntervalDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'interval', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterSortBy> thenByLastInterval() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'lastInterval', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterSortBy> thenByLastIntervalDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'lastInterval', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterSortBy> thenByQuality() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'quality', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterSortBy> thenByQualityDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'quality', Sort.desc);
     });
   }
 
@@ -745,6 +1340,30 @@ extension ItemQuerySortThenBy on QueryBuilder<Item, Item, QSortThenBy> {
       return query.addSortBy(r'question', Sort.desc);
     });
   }
+
+  QueryBuilder<Item, Item, QAfterSortBy> thenByRepetition() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'repetition', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterSortBy> thenByRepetitionDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'repetition', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterSortBy> thenByReviewAfter() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'reviewAfter', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterSortBy> thenByReviewAfterDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'reviewAfter', Sort.desc);
+    });
+  }
 }
 
 extension ItemQueryWhereDistinct on QueryBuilder<Item, Item, QDistinct> {
@@ -755,10 +1374,46 @@ extension ItemQueryWhereDistinct on QueryBuilder<Item, Item, QDistinct> {
     });
   }
 
+  QueryBuilder<Item, Item, QDistinct> distinctByEasinessFactor() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'easinessFactor');
+    });
+  }
+
+  QueryBuilder<Item, Item, QDistinct> distinctByInterval() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'interval');
+    });
+  }
+
+  QueryBuilder<Item, Item, QDistinct> distinctByLastInterval() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'lastInterval');
+    });
+  }
+
+  QueryBuilder<Item, Item, QDistinct> distinctByQuality() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'quality');
+    });
+  }
+
   QueryBuilder<Item, Item, QDistinct> distinctByQuestion(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'question', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<Item, Item, QDistinct> distinctByRepetition() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'repetition');
+    });
+  }
+
+  QueryBuilder<Item, Item, QDistinct> distinctByReviewAfter() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'reviewAfter');
     });
   }
 
@@ -782,9 +1437,45 @@ extension ItemQueryProperty on QueryBuilder<Item, Item, QQueryProperty> {
     });
   }
 
+  QueryBuilder<Item, double?, QQueryOperations> easinessFactorProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'easinessFactor');
+    });
+  }
+
+  QueryBuilder<Item, int?, QQueryOperations> intervalProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'interval');
+    });
+  }
+
+  QueryBuilder<Item, int?, QQueryOperations> lastIntervalProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'lastInterval');
+    });
+  }
+
+  QueryBuilder<Item, int?, QQueryOperations> qualityProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'quality');
+    });
+  }
+
   QueryBuilder<Item, String, QQueryOperations> questionProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'question');
+    });
+  }
+
+  QueryBuilder<Item, int?, QQueryOperations> repetitionProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'repetition');
+    });
+  }
+
+  QueryBuilder<Item, DateTime?, QQueryOperations> reviewAfterProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'reviewAfter');
     });
   }
 

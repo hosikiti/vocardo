@@ -5,20 +5,30 @@ import 'package:vocardo/core/model/study_set.dart';
 import 'package:vocardo/core/service/card/card_service.dart';
 import 'package:vocardo/core/service/isar/isar_service.dart';
 import 'package:vocardo/core/service/study_set/current_study_set_provider.dart';
+import 'package:vocardo/core/util/repetition_util.dart';
 
 part 'card_list_provider.g.dart';
 
 class CardItem {
-  CardItem({required this.id, required this.question, required this.answer});
+  CardItem(
+      {required this.id,
+      required this.question,
+      required this.answer,
+      this.stats});
 
   final String question;
   final String answer;
   final int id;
+  final RepetitionStats? stats;
 
   CardItem.fromModel(Item item)
       : id = item.id,
         question = item.question,
-        answer = item.answer;
+        answer = item.answer,
+        stats = RepetitionStats(
+            repeatCount: item.repetition ?? 0,
+            nextIntervalDays: item.interval ?? 0,
+            lastEasinessFactor: item.easinessFactor ?? 0);
 }
 
 @Riverpod(keepAlive: true)

@@ -18,12 +18,21 @@ class CardService {
 
   CardService(this.isar);
 
+  List<CardItem> fromModel(List<Item> items) {
+    return items.map((item) => CardItem.fromModel(item)).toList();
+  }
+
   Future<List<CardItem>> getAll(int studySetId) async {
     final items = await isar.items
         .filter()
         .studySet((q) => q.idEqualTo(studySetId))
         .findAll();
-    return items.map((item) => CardItem.fromModel(item)).toList();
+    return fromModel(items);
+  }
+
+  Future<Item?> getItem(int id) async {
+    final item = await isar.items.filter().idEqualTo(id).findFirst();
+    return item;
   }
 
   Future<Item> addCard(
@@ -67,6 +76,28 @@ class CardService {
     }
     await isar.writeTxn(() async {
       item.soundData = soundData;
+      await isar.items.put(item);
+    });
+  }
+
+  Future<void> updateCardRepetition(
+    int id, {
+    required int repetition,
+    required double easinessFactor,
+    required int interval,
+    required int quality,
+    required DateTime reviewAfter,
+  }) async {
+    final item = await isar.items.get(id);
+    if (item == null) {
+      return;
+    }
+    await isar.writeTxn(() async {
+      item.repetition = repetition;
+      item.interval = interval;
+      item.easinessFactor = easinessFactor;
+      item.quality = quality;
+      item.reviewAfter = reviewAfter;
       await isar.items.put(item);
     });
   }

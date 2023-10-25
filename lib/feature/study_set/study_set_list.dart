@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:vocardo/core/service/card/practice_card_list_provider.dart';
 import 'package:vocardo/core/service/study_set/current_study_set_provider.dart';
 import 'package:vocardo/core/service/study_set/study_set_list_provider.dart';
 import 'package:vocardo/core/util/text_util.dart';
 import 'package:vocardo/core/widget/dialog_widget.dart';
 import 'package:vocardo/feature/card_list/card_list.dart';
 import 'package:vocardo/feature/edit/edit.dart';
+import 'package:vocardo/feature/practice/practice.dart';
 import 'package:vocardo/feature/study_set/add_study_set_dialog.dart';
 
 class StudySetListPage extends ConsumerWidget {
@@ -61,7 +63,17 @@ class StudySetListPage extends ConsumerWidget {
                         Row(
                           children: [
                             ElevatedButton.icon(
-                              onPressed: () {},
+                              onPressed: () {
+                                ref
+                                    .read(currentStudySetProvider.notifier)
+                                    .setStudySetId(set);
+                                ref
+                                    .read(practiceCardListProvider.notifier)
+                                    .init();
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) =>
+                                        const PracticePage()));
+                              },
                               label: const Text(
                                 "PRACTICE",
                                 style: TextStyle(color: Colors.white),

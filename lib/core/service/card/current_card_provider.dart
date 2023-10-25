@@ -31,4 +31,14 @@ class CurrentCard extends _$CurrentCard {
       return cards.elementAt(cards.indexOf(card) + 1);
     });
   }
+
+  bool isLast() {
+    final cardsRef = ref.read(practiceCardListProvider);
+    if (state.valueOrNull == null || cardsRef.valueOrNull == null) {
+      return false;
+    }
+    final cards = cardsRef.valueOrNull!;
+    final card = state.valueOrNull!;
+    return cards.last == card;
+  }
 }

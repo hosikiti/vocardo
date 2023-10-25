@@ -58,6 +58,7 @@ class _CardListPageState extends ConsumerState<CardListPage> {
         data: (cards) {
           return ListView.builder(
             itemBuilder: (context, index) {
+              final card = cards[index];
               return InkWell(
                 onTap: () {
                   final studySet = ref.read(currentStudySetProvider);
@@ -87,7 +88,7 @@ class _CardListPageState extends ConsumerState<CardListPage> {
                             mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
                               ListTile(
-                                title: Text(cards[index].question),
+                                title: Text(card.question),
                                 titleTextStyle: const TextStyle(
                                     fontWeight: FontWeight.bold, fontSize: 30),
                                 subtitle: Text(cards[index].answer),
@@ -95,6 +96,13 @@ class _CardListPageState extends ConsumerState<CardListPage> {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: <Widget>[
+                                  Text(
+                                      (card.stats?.nextIntervalDays ?? 0) > 0
+                                          ? "Review in ${card.stats?.nextIntervalDays} day(s)"
+                                          : "",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodySmall),
                                   IconButton(
                                     icon: const Icon(Icons.delete),
                                     onPressed: () async {
