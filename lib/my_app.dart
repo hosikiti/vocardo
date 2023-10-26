@@ -16,7 +16,7 @@ class MyApp extends ConsumerWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.orange),
         useMaterial3: true,
       ),
-      darkTheme: ThemeData.dark(),
+      darkTheme: ThemeData.dark(useMaterial3: true),
       themeMode: ThemeMode.system,
       home: const MyHomePage(),
     );

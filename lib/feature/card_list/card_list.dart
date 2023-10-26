@@ -89,8 +89,8 @@ class _CardListPageState extends ConsumerState<CardListPage> {
                             children: <Widget>[
                               ListTile(
                                 title: Text(card.question),
-                                titleTextStyle: const TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 30),
+                                titleTextStyle:
+                                    Theme.of(context).textTheme.titleLarge,
                                 subtitle: Text(cards[index].answer),
                               ),
                               Row(

@@ -76,14 +76,9 @@ class StudySetListPage extends ConsumerWidget {
                               },
                               label: const Text(
                                 "PRACTICE",
-                                style: TextStyle(color: Colors.white),
                               ),
                               icon: const Icon(Icons.play_arrow,
                                   color: Color.fromRGBO(255, 255, 255, 1)),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor:
-                                    Theme.of(context).colorScheme.primary,
-                              ),
                             ),
                             const SizedBox(width: 16),
                             ElevatedButton.icon(
@@ -96,17 +91,12 @@ class StudySetListPage extends ConsumerWidget {
                               },
                               label: const Text(
                                 "ADD",
-                                style: TextStyle(color: Colors.white),
                               ),
                               icon: const Icon(Icons.add,
                                   color: Color.fromRGBO(255, 255, 255, 1)),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor:
-                                    Theme.of(context).colorScheme.primary,
-                              ),
                             ),
                             const SizedBox(width: 16),
-                            IconButton.filled(
+                            IconButton(
                                 onPressed: () async {
                                   final yes = await showOkCancelDialog(context,
                                       content: "Are you sure?",
