@@ -1,7 +1,10 @@
+import 'dart:math';
+
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:vocardo/core/service/card/card_list_provider.dart';
 import 'package:vocardo/core/service/card/current_card_provider.dart';
 import 'package:vocardo/core/util/repetition_util.dart';
 import 'package:vocardo/core/widget/recording_dialog_widget.dart';
@@ -32,61 +35,15 @@ class _PracticePageState extends ConsumerState<PracticePage> {
                 if (card == null) {
                   return const Text("No cards");
                 }
-                return Card(
-                    elevation: 24,
-                    child: Stack(
-                      alignment: Alignment.bottomCenter,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Center(
-                            child: Text(
-                                showAnswer ? card.answer : card.question,
-                                textAlign: TextAlign.center,
-                                style:
-                                    Theme.of(context).textTheme.headlineLarge),
-                          ),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            IconButton(
-                              onPressed: () {
-                                showRecordingDialog(context);
-                              },
-                              icon: const Icon(Icons.mic),
-                            ),
-
-                            // Play button
-                            IconButton(
-                              onPressed: () async {
-                                AudioPlayer audioPlayer = AudioPlayer();
-                                final cardService =
-                                    await ref.read(cardServiceProvider.future);
-                                final audioData =
-                                    await cardService.getSound(card.id);
-                                if (audioData == null) {
-                                  return;
-                                }
-                                await audioPlayer.play(
-                                    BytesSource(Uint8List.fromList(audioData)));
-                              },
-                              icon: const Icon(Icons.volume_up),
-                            ),
-
-                            /// Recording button
-                            IconButton(
-                              onPressed: () async {
-                                setState(() {
-                                  showAnswer = !showAnswer;
-                                });
-                              },
-                              icon: const Icon(Icons.replay),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ));
+                return AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 180),
+                  transitionBuilder: __transitionBuilder,
+                  layoutBuilder: (widget, list) => Stack(children: [
+                    if (widget != null) widget,
+                    ...list,
+                  ]),
+                  child: _buildCard(card),
+                );
               }, error: (_, __) {
                 return const Text("Error");
               }, loading: () {
@@ -171,7 +128,84 @@ class _PracticePageState extends ConsumerState<PracticePage> {
 
     ref.read(currentCardProvider.notifier).next();
     setState(() {
-      showAnswer = false;
+      // show the back side randomly
+      showAnswer = Random().nextBool();
     });
+  }
+
+  Widget _buildCard(CardItem card) {
+    return Card(
+        key: ValueKey(showAnswer),
+        elevation: 24,
+        child: Stack(
+          alignment: Alignment.bottomCenter,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Center(
+                child: Text(showAnswer ? card.answer : card.question,
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.headlineLarge),
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                IconButton(
+                  onPressed: () {
+                    showRecordingDialog(context);
+                  },
+                  icon: const Icon(Icons.mic),
+                ),
+
+                // Play button
+                IconButton(
+                  onPressed: () async {
+                    AudioPlayer audioPlayer = AudioPlayer();
+                    final cardService =
+                        await ref.read(cardServiceProvider.future);
+                    final audioData = await cardService.getSound(card.id);
+                    if (audioData == null) {
+                      return;
+                    }
+                    await audioPlayer
+                        .play(BytesSource(Uint8List.fromList(audioData)));
+                  },
+                  icon: const Icon(Icons.volume_up),
+                ),
+
+                /// Recording button
+                IconButton(
+                  onPressed: () async {
+                    setState(() {
+                      showAnswer = !showAnswer;
+                    });
+                  },
+                  icon: const Icon(Icons.replay),
+                ),
+              ],
+            ),
+          ],
+        ));
+  }
+
+  Widget __transitionBuilder(Widget widget, Animation<double> animation) {
+    final rotateAnim = Tween(begin: pi, end: 0.0).animate(animation);
+    return AnimatedBuilder(
+      animation: rotateAnim,
+      child: widget,
+      builder: (context, widget) {
+        final isUnder = (ValueKey(showAnswer) != widget?.key);
+        var tilt = ((animation.value - 0.5).abs() - 0.5) * 0.003;
+        tilt *= isUnder ? -1.0 : 1.0;
+        final value =
+            isUnder ? min(rotateAnim.value, pi / 2) : rotateAnim.value;
+        return Transform(
+          transform: Matrix4.rotationY(value)..setEntry(3, 0, tilt),
+          alignment: Alignment.center,
+          child: widget,
+        );
+      },
+    );
   }
 }

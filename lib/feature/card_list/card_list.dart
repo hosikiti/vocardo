@@ -98,7 +98,7 @@ class _CardListPageState extends ConsumerState<CardListPage> {
                                 children: <Widget>[
                                   Text(
                                       (card.stats?.nextIntervalDays ?? 0) > 0
-                                          ? "Review in ${card.stats?.nextIntervalDays} day(s)"
+                                          ? "Review in ${card.stats?.nextIntervalDays} days"
                                           : "",
                                       style: Theme.of(context)
                                           .textTheme
