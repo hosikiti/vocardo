@@ -33,53 +33,60 @@ class _PracticePageState extends ConsumerState<PracticePage> {
                   return const Text("No cards");
                 }
                 return Card(
+                    elevation: 24,
                     child: Stack(
-                  alignment: Alignment.bottomCenter,
-                  children: [
-                    Center(
-                      child: Text(showAnswer ? card.answer : card.question,
-                          style: Theme.of(context).textTheme.headlineLarge),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      alignment: Alignment.bottomCenter,
                       children: [
-                        IconButton(
-                          onPressed: () {
-                            showRecordingDialog(context);
-                          },
-                          icon: const Icon(Icons.mic),
+                        Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Center(
+                            child: Text(
+                                showAnswer ? card.answer : card.question,
+                                textAlign: TextAlign.center,
+                                style:
+                                    Theme.of(context).textTheme.headlineLarge),
+                          ),
                         ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            IconButton(
+                              onPressed: () {
+                                showRecordingDialog(context);
+                              },
+                              icon: const Icon(Icons.mic),
+                            ),
 
-                        // Play button
-                        IconButton(
-                          onPressed: () async {
-                            AudioPlayer audioPlayer = AudioPlayer();
-                            final cardService =
-                                await ref.read(cardServiceProvider.future);
-                            final audioData =
-                                await cardService.getSound(card.id);
-                            if (audioData == null) {
-                              return;
-                            }
-                            await audioPlayer.play(
-                                BytesSource(Uint8List.fromList(audioData)));
-                          },
-                          icon: const Icon(Icons.volume_up),
-                        ),
+                            // Play button
+                            IconButton(
+                              onPressed: () async {
+                                AudioPlayer audioPlayer = AudioPlayer();
+                                final cardService =
+                                    await ref.read(cardServiceProvider.future);
+                                final audioData =
+                                    await cardService.getSound(card.id);
+                                if (audioData == null) {
+                                  return;
+                                }
+                                await audioPlayer.play(
+                                    BytesSource(Uint8List.fromList(audioData)));
+                              },
+                              icon: const Icon(Icons.volume_up),
+                            ),
 
-                        /// Recording button
-                        IconButton(
-                          onPressed: () async {
-                            setState(() {
-                              showAnswer = !showAnswer;
-                            });
-                          },
-                          icon: const Icon(Icons.replay),
+                            /// Recording button
+                            IconButton(
+                              onPressed: () async {
+                                setState(() {
+                                  showAnswer = !showAnswer;
+                                });
+                              },
+                              icon: const Icon(Icons.replay),
+                            ),
+                          ],
                         ),
                       ],
-                    ),
-                  ],
-                ));
+                    ));
               }, error: (_, __) {
                 return const Text("Error");
               }, loading: () {
