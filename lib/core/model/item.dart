@@ -10,11 +10,11 @@ class Item {
 
   late String question;
   late String answer;
-  late int? repetition;
-  late int? interval;
-  late int? lastInterval;
-  late DateTime? reviewAfter;
-  late double? easinessFactor;
-  late int? quality;
-  late List<byte>? soundData;
+  int? repetition;
+  int? interval;
+  int? lastInterval;
+  DateTime? reviewAfter;
+  double? easinessFactor;
+  int? quality;
+  List<byte>? soundData;
 }
