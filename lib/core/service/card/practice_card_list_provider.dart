@@ -24,14 +24,16 @@ class PracticeCardList extends _$PracticeCardList {
     final query = isar.items
         .filter()
         .studySet((q) => q.idEqualTo(set.id))
-        .qualityLessThan(4)
-        .reviewAfterLessThan(DateTime.now())
+        .sortByReviewAfter()
+        .thenByQuality()
+        .limit(100)
         .build();
     final card = await query.findAll();
 
     // pick 10 random cards
-    final random = card.toList()..shuffle();
-    final picked = random.take(10).toList();
+    final picked = card.take(10).toList()
+      ..shuffle()
+      ..toList();
     return cardService.fromModel(picked);
   }
 

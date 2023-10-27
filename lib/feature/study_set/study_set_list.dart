@@ -61,6 +61,7 @@ class StudySetListPage extends ConsumerWidget {
                             "${set.items.length} ${cardOrCards(set.items.length)}"),
                         const SizedBox(height: 16),
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             ElevatedButton.icon(
                               onPressed: () {
@@ -95,7 +96,6 @@ class StudySetListPage extends ConsumerWidget {
                               icon: const Icon(Icons.add,
                                   color: Color.fromRGBO(255, 255, 255, 1)),
                             ),
-                            const SizedBox(width: 16),
                             IconButton(
                                 onPressed: () async {
                                   final yes = await showOkCancelDialog(context,
