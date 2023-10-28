@@ -38,6 +38,7 @@ class StudySetListPage extends ConsumerWidget {
       return ListView.builder(
         itemBuilder: (context, index) {
           final set = sets[index];
+          final completedCount = set.items.where((e) => e.quality == 5).length;
           return Padding(
             padding: const EdgeInsets.all(16.0),
             child: InkWell(
