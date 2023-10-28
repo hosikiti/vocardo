@@ -33,7 +33,14 @@ class _PracticePageState extends ConsumerState<PracticePage> {
             Expanded(
               child: card.when(data: (card) {
                 if (card == null) {
-                  return const Text("No cards");
+                  return Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Center(
+                      child: Text("No cards to remember\nfor now!",
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.titleLarge),
+                    ),
+                  );
                 }
                 return AnimatedSwitcher(
                   duration: const Duration(milliseconds: 180),
@@ -47,7 +54,9 @@ class _PracticePageState extends ConsumerState<PracticePage> {
               }, error: (_, __) {
                 return const Text("Error");
               }, loading: () {
-                return const Text("Loading");
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
               }),
             ),
             SizedBox(

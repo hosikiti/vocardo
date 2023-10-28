@@ -1,3 +1,4 @@
+import 'package:isar/isar.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:vocardo/core/service/card/card_list_provider.dart';
 import 'package:vocardo/core/service/card/practice_card_list_provider.dart';
@@ -10,7 +11,7 @@ class CurrentCard extends _$CurrentCard {
   Future<CardItem?> build() async {
     final cards = ref.watch(practiceCardListProvider);
 
-    if (cards.valueOrNull == null) {
+    if (cards.valueOrNull == null || cards.valueOrNull!.isEmpty) {
       return null;
     }
     return Future.value(cards.valueOrNull!.elementAt(0));
