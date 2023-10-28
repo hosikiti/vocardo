@@ -4,6 +4,7 @@ import 'package:vocardo/core/service/card/card_list_provider.dart';
 import 'package:vocardo/core/service/card/practice_card_list_provider.dart';
 import 'package:vocardo/core/service/study_set/current_study_set_provider.dart';
 import 'package:vocardo/core/util/text_util.dart';
+import 'package:vocardo/core/util/time_util.dart';
 import 'package:vocardo/core/widget/dialog_widget.dart';
 import 'package:vocardo/feature/edit/edit.dart';
 import 'package:vocardo/feature/import/import.dart';
@@ -97,9 +98,9 @@ class _CardListPageState extends ConsumerState<CardListPage> {
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: <Widget>[
                                   Text(
-                                      (card.stats?.nextIntervalDays ?? 0) > 0
-                                          ? "Review in ${card.stats?.nextIntervalDays} hrs"
-                                          : "",
+                                      (card.reviewAfter != null
+                                          ? "Review in ${whenIsIt(card.reviewAfter!)}"
+                                          : ""),
                                       style: Theme.of(context)
                                           .textTheme
                                           .bodySmall),

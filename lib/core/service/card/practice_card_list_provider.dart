@@ -48,10 +48,8 @@ class PracticeCardList extends _$PracticeCardList {
     final card = await query.findAll();
 
     // pick 10 random cards
-    final picked = card.take(10).toList()
-      ..shuffle()
-      ..toList();
-
+    card.shuffle();
+    final picked = card.take(10).toList();
     return cardService.fromModel(picked);
   }
 

@@ -6,7 +6,7 @@ part of 'practice_card_list_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$practiceCardListHash() => r'ba7077557a230a15a618f7f19639d31fb0f6d990';
+String _$practiceCardListHash() => r'f3a56b899d970239ddcd66c82dabf1e336ea5992';
 
 /// See also [PracticeCardList].
 @ProviderFor(PracticeCardList)

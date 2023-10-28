@@ -10,25 +10,23 @@ import 'package:vocardo/core/util/repetition_util.dart';
 part 'card_list_provider.g.dart';
 
 class CardItem {
-  CardItem(
-      {required this.id,
-      required this.question,
-      required this.answer,
-      this.stats});
+  CardItem({
+    required this.id,
+    required this.question,
+    required this.answer,
+    this.reviewAfter,
+  });
 
   final String question;
   final String answer;
   final int id;
-  final RepetitionStats? stats;
+  DateTime? reviewAfter;
 
   CardItem.fromModel(Item item)
       : id = item.id,
         question = item.question,
         answer = item.answer,
-        stats = RepetitionStats(
-            repeatCount: item.repetition ?? 0,
-            nextIntervalDays: item.interval ?? 0,
-            lastEasinessFactor: item.easinessFactor ?? 0);
+        reviewAfter = item.reviewAfter;
 }
 
 @Riverpod(keepAlive: true)
