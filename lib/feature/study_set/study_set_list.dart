@@ -16,6 +16,7 @@ class StudySetListPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final data = ref.watch(studySetListProvider);
+    final theme = Theme.of(context);
 
     return data.when(data: (sets) {
       if (sets.isEmpty) {
@@ -55,8 +56,7 @@ class StudySetListPage extends ConsumerWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(set.name,
-                            style: Theme.of(context).textTheme.headlineMedium),
+                        Text(set.name, style: theme.textTheme.headlineLarge),
                         const SizedBox(height: 16),
                         Text(
                             "$completedCount / ${set.items.length} ${cardOrCards(set.items.length)}"),
