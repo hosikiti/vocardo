@@ -37,28 +37,33 @@ const ItemSchema = CollectionSchema(
       name: r'lastInterval',
       type: IsarType.long,
     ),
-    r'quality': PropertySchema(
+    r'lastReviewed': PropertySchema(
       id: 4,
+      name: r'lastReviewed',
+      type: IsarType.dateTime,
+    ),
+    r'quality': PropertySchema(
+      id: 5,
       name: r'quality',
       type: IsarType.long,
     ),
     r'question': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'question',
       type: IsarType.string,
     ),
     r'repetition': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'repetition',
       type: IsarType.long,
     ),
     r'reviewAfter': PropertySchema(
-      id: 7,
+      id: 8,
       name: r'reviewAfter',
       type: IsarType.dateTime,
     ),
     r'soundData': PropertySchema(
-      id: 8,
+      id: 9,
       name: r'soundData',
       type: IsarType.byteList,
     )
@@ -111,11 +116,12 @@ void _itemSerialize(
   writer.writeDouble(offsets[1], object.easinessFactor);
   writer.writeLong(offsets[2], object.interval);
   writer.writeLong(offsets[3], object.lastInterval);
-  writer.writeLong(offsets[4], object.quality);
-  writer.writeString(offsets[5], object.question);
-  writer.writeLong(offsets[6], object.repetition);
-  writer.writeDateTime(offsets[7], object.reviewAfter);
-  writer.writeByteList(offsets[8], object.soundData);
+  writer.writeDateTime(offsets[4], object.lastReviewed);
+  writer.writeLong(offsets[5], object.quality);
+  writer.writeString(offsets[6], object.question);
+  writer.writeLong(offsets[7], object.repetition);
+  writer.writeDateTime(offsets[8], object.reviewAfter);
+  writer.writeByteList(offsets[9], object.soundData);
 }
 
 Item _itemDeserialize(
@@ -130,11 +136,12 @@ Item _itemDeserialize(
   object.id = id;
   object.interval = reader.readLongOrNull(offsets[2]);
   object.lastInterval = reader.readLongOrNull(offsets[3]);
-  object.quality = reader.readLongOrNull(offsets[4]);
-  object.question = reader.readString(offsets[5]);
-  object.repetition = reader.readLongOrNull(offsets[6]);
-  object.reviewAfter = reader.readDateTimeOrNull(offsets[7]);
-  object.soundData = reader.readByteList(offsets[8]);
+  object.lastReviewed = reader.readDateTimeOrNull(offsets[4]);
+  object.quality = reader.readLongOrNull(offsets[5]);
+  object.question = reader.readString(offsets[6]);
+  object.repetition = reader.readLongOrNull(offsets[7]);
+  object.reviewAfter = reader.readDateTimeOrNull(offsets[8]);
+  object.soundData = reader.readByteList(offsets[9]);
   return object;
 }
 
@@ -154,14 +161,16 @@ P _itemDeserializeProp<P>(
     case 3:
       return (reader.readLongOrNull(offset)) as P;
     case 4:
-      return (reader.readLongOrNull(offset)) as P;
-    case 5:
-      return (reader.readString(offset)) as P;
-    case 6:
-      return (reader.readLongOrNull(offset)) as P;
-    case 7:
       return (reader.readDateTimeOrNull(offset)) as P;
+    case 5:
+      return (reader.readLongOrNull(offset)) as P;
+    case 6:
+      return (reader.readString(offset)) as P;
+    case 7:
+      return (reader.readLongOrNull(offset)) as P;
     case 8:
+      return (reader.readDateTimeOrNull(offset)) as P;
+    case 9:
       return (reader.readByteList(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -644,6 +653,75 @@ extension ItemQueryFilter on QueryBuilder<Item, Item, QFilterCondition> {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
         property: r'lastInterval',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> lastReviewedIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'lastReviewed',
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> lastReviewedIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'lastReviewed',
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> lastReviewedEqualTo(
+      DateTime? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'lastReviewed',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> lastReviewedGreaterThan(
+    DateTime? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'lastReviewed',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> lastReviewedLessThan(
+    DateTime? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'lastReviewed',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterFilterCondition> lastReviewedBetween(
+    DateTime? lower,
+    DateTime? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'lastReviewed',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -1207,6 +1285,18 @@ extension ItemQuerySortBy on QueryBuilder<Item, Item, QSortBy> {
     });
   }
 
+  QueryBuilder<Item, Item, QAfterSortBy> sortByLastReviewed() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'lastReviewed', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterSortBy> sortByLastReviewedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'lastReviewed', Sort.desc);
+    });
+  }
+
   QueryBuilder<Item, Item, QAfterSortBy> sortByQuality() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'quality', Sort.asc);
@@ -1317,6 +1407,18 @@ extension ItemQuerySortThenBy on QueryBuilder<Item, Item, QSortThenBy> {
     });
   }
 
+  QueryBuilder<Item, Item, QAfterSortBy> thenByLastReviewed() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'lastReviewed', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Item, Item, QAfterSortBy> thenByLastReviewedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'lastReviewed', Sort.desc);
+    });
+  }
+
   QueryBuilder<Item, Item, QAfterSortBy> thenByQuality() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'quality', Sort.asc);
@@ -1392,6 +1494,12 @@ extension ItemQueryWhereDistinct on QueryBuilder<Item, Item, QDistinct> {
     });
   }
 
+  QueryBuilder<Item, Item, QDistinct> distinctByLastReviewed() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'lastReviewed');
+    });
+  }
+
   QueryBuilder<Item, Item, QDistinct> distinctByQuality() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'quality');
@@ -1452,6 +1560,12 @@ extension ItemQueryProperty on QueryBuilder<Item, Item, QQueryProperty> {
   QueryBuilder<Item, int?, QQueryOperations> lastIntervalProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'lastInterval');
+    });
+  }
+
+  QueryBuilder<Item, DateTime?, QQueryOperations> lastReviewedProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'lastReviewed');
     });
   }
 

@@ -58,7 +58,7 @@ class StudySetListPage extends ConsumerWidget {
                             style: Theme.of(context).textTheme.headlineMedium),
                         const SizedBox(height: 16),
                         Text(
-                            "${set.items.length} ${cardOrCards(set.items.length)}"),
+                            "$completedCount / ${set.items.length} ${cardOrCards(set.items.length)}"),
                         const SizedBox(height: 16),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,

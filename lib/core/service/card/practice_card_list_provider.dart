@@ -16,16 +16,33 @@ class PracticeCardList extends _$PracticeCardList {
     return pickCards();
   }
 
+  resetEverything() async {
+    final isar = await ref.read(isarProvider.future);
+
+    final items = await isar.items.where().findAll();
+
+    for (final item in items) {
+      await isar.writeTxn(() async {
+        item.repetition = null;
+        item.easinessFactor = 2.5;
+        item.quality = null;
+        item.interval = null;
+        item.reviewAfter = null;
+        item.lastReviewed = null;
+        await isar.items.put(item);
+      });
+    }
+  }
+
   Future<List<CardItem>> pickCards() async {
     final cardService = await ref.read(cardServiceProvider.future);
     final set = ref.watch(currentStudySetProvider);
-
     final isar = await ref.read(isarProvider.future);
+
     final query = isar.items
         .filter()
         .studySet((q) => q.idEqualTo(set.id))
-        .sortByReviewAfter()
-        .thenByQuality()
+        .reviewAfterLessThan(DateTime.now())
         .limit(100)
         .build();
     final card = await query.findAll();
@@ -34,6 +51,7 @@ class PracticeCardList extends _$PracticeCardList {
     final picked = card.take(10).toList()
       ..shuffle()
       ..toList();
+
     return cardService.fromModel(picked);
   }
 

@@ -108,7 +108,7 @@ class _PracticePageState extends ConsumerState<PracticePage> {
         lastIntervalDays: item.interval);
 
     DateTime reviewAfter =
-        DateTime.now().add(Duration(days: rep.nextIntervalDays));
+        DateTime.now().add(Duration(hours: rep.nextIntervalDays));
 
     await cardService.updateCardRepetition(
       card.id,
@@ -117,6 +117,7 @@ class _PracticePageState extends ConsumerState<PracticePage> {
       interval: rep.nextIntervalDays,
       quality: quality,
       reviewAfter: reviewAfter,
+      lastReviewed: DateTime.now(),
     );
 
     if (ref.read(currentCardProvider.notifier).isLast()) {
@@ -135,7 +136,7 @@ class _PracticePageState extends ConsumerState<PracticePage> {
 
   Widget _buildCard(CardItem card) {
     return Card(
-        key: ValueKey(showAnswer),
+        key: ValueKey("$showAnswer-${card.id}"),
         elevation: 24,
         child: Stack(
           alignment: Alignment.bottomCenter,

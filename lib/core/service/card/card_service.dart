@@ -87,6 +87,7 @@ class CardService {
     required int interval,
     required int quality,
     required DateTime reviewAfter,
+    required DateTime lastReviewed,
   }) async {
     final item = await isar.items.get(id);
     if (item == null) {
@@ -98,6 +99,7 @@ class CardService {
       item.easinessFactor = easinessFactor;
       item.quality = quality;
       item.reviewAfter = reviewAfter;
+      item.lastReviewed = lastReviewed;
       await isar.items.put(item);
     });
   }

@@ -14,6 +14,7 @@ class Item {
   int? interval;
   int? lastInterval;
   DateTime? reviewAfter;
+  DateTime? lastReviewed;
   double? easinessFactor;
   int? quality;
   List<byte>? soundData;
