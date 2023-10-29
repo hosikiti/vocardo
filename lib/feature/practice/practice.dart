@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vocardo/core/service/card/card_list_provider.dart';
 import 'package:vocardo/core/service/card/current_card_provider.dart';
 import 'package:vocardo/core/util/repetition_util.dart';
+import 'package:vocardo/core/widget/dialog_widget.dart';
 import 'package:vocardo/core/widget/recording_dialog_widget.dart';
 
 import '../../core/service/card/card_service.dart';
@@ -25,7 +26,37 @@ class _PracticePageState extends ConsumerState<PracticePage> {
     final card = ref.watch(currentCardProvider);
 
     return Scaffold(
-        appBar: AppBar(),
+        appBar: AppBar(
+          actions: [
+            PopupMenuButton<String>(
+              itemBuilder: (BuildContext context) {
+                return [
+                  PopupMenuItem(
+                    value: "delete",
+                    child: const Text("Delete this card"),
+                    onTap: () async {
+                      final id = card.valueOrNull?.id;
+                      if (id == null) {
+                        return;
+                      }
+
+                      final yes = await showOkCancelDialog(context,
+                          content: "Are you sure?", title: "Delete");
+                      if (!yes) {
+                        return;
+                      }
+
+                      final cardService =
+                          await ref.read(cardServiceProvider.future);
+                      await cardService.deleteCard(id);
+                      ref.read(currentCardProvider.notifier).next();
+                    },
+                  ),
+                ];
+              },
+            )
+          ],
+        ),
         body: Padding(
           padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
           child:

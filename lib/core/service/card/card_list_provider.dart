@@ -5,7 +5,6 @@ import 'package:vocardo/core/model/study_set.dart';
 import 'package:vocardo/core/service/card/card_service.dart';
 import 'package:vocardo/core/service/isar/isar_service.dart';
 import 'package:vocardo/core/service/study_set/current_study_set_provider.dart';
-import 'package:vocardo/core/util/repetition_util.dart';
 
 part 'card_list_provider.g.dart';
 
