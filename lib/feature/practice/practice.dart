@@ -201,8 +201,15 @@ class _PracticePageState extends ConsumerState<PracticePage> {
                 // Play button
                 IconButton(
                   onPressed: () async {
-                    ref.read(currentTtsProvider.notifier).speakQuestion(
-                        showAnswer ? card.answer : card.question);
+                    if (showAnswer) {
+                      ref
+                          .read(currentTtsProvider.notifier)
+                          .speakAnswer(card.answer);
+                    } else {
+                      ref
+                          .read(currentTtsProvider.notifier)
+                          .speakQuestion(card.question);
+                    }
                   },
                   icon: const Icon(Icons.volume_up),
                 ),
