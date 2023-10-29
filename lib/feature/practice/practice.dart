@@ -1,11 +1,10 @@
 import 'dart:math';
 
-import 'package:audioplayers/audioplayers.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vocardo/core/service/card/card_list_provider.dart';
 import 'package:vocardo/core/service/card/current_card_provider.dart';
+import 'package:vocardo/core/service/tts/tts_service.dart';
 import 'package:vocardo/core/util/repetition_util.dart';
 import 'package:vocardo/core/widget/dialog_widget.dart';
 import 'package:vocardo/core/widget/recording_dialog_widget.dart';
@@ -202,15 +201,8 @@ class _PracticePageState extends ConsumerState<PracticePage> {
                 // Play button
                 IconButton(
                   onPressed: () async {
-                    AudioPlayer audioPlayer = AudioPlayer();
-                    final cardService =
-                        await ref.read(cardServiceProvider.future);
-                    final audioData = await cardService.getSound(card.id);
-                    if (audioData == null) {
-                      return;
-                    }
-                    await audioPlayer
-                        .play(BytesSource(Uint8List.fromList(audioData)));
+                    ref.read(currentTtsProvider.notifier).speakQuestion(
+                        showAnswer ? card.answer : card.question);
                   },
                   icon: const Icon(Icons.volume_up),
                 ),

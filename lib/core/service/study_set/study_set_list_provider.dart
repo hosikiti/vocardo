@@ -38,4 +38,13 @@ class StudySetList extends _$StudySetList {
     });
     ref.invalidateSelf();
   }
+
+  Future<void> updateStudySet(StudySet set) async {
+    state = const AsyncLoading();
+    final db = await ref.read(isarProvider.future);
+    await db.writeTxn(() async {
+      db.studySets.put(set);
+    });
+    ref.invalidateSelf();
+  }
 }

@@ -10,7 +10,7 @@ class CurrentStudySet extends _$CurrentStudySet {
     return StudySet();
   }
 
-  void setStudySetId(StudySet set) {
+  void setStudySet(StudySet set) {
     state = set;
   }
 }

@@ -44,7 +44,7 @@ class StudySetListPage extends ConsumerWidget {
             padding: const EdgeInsets.all(16.0),
             child: InkWell(
               onTap: () {
-                ref.read(currentStudySetProvider.notifier).setStudySetId(set);
+                ref.read(currentStudySetProvider.notifier).setStudySet(set);
                 Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => const CardListPage(),
                 ));
@@ -68,7 +68,7 @@ class StudySetListPage extends ConsumerWidget {
                               onPressed: () {
                                 ref
                                     .read(currentStudySetProvider.notifier)
-                                    .setStudySetId(set);
+                                    .setStudySet(set);
                                 ref
                                     .read(practiceCardListProvider.notifier)
                                     .init();

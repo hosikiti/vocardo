@@ -9,6 +9,7 @@ import 'package:vocardo/core/widget/dialog_widget.dart';
 import 'package:vocardo/feature/edit/edit.dart';
 import 'package:vocardo/feature/import/import.dart';
 import 'package:vocardo/feature/practice/practice.dart';
+import 'package:vocardo/feature/study_set/edit_study_set.dart';
 
 class CardListPage extends ConsumerStatefulWidget {
   const CardListPage({super.key});
@@ -41,6 +42,15 @@ class _CardListPageState extends ConsumerState<CardListPage> {
           PopupMenuButton<String>(
             itemBuilder: (BuildContext context) {
               return [
+                PopupMenuItem(
+                  value: "edit",
+                  child: const Text("Edit"),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const EditStudySet()));
+                  },
+                ),
                 PopupMenuItem(
                   value: "import",
                   child: const Text("Import CSV"),

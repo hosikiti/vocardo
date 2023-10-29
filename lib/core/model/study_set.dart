@@ -9,6 +9,13 @@ class StudySet {
 
   late String name;
 
+  String questionLanguage = "";
+  String questionVoiceName = "";
+  String questionVoiceLocale = "";
+  String answerLanguage = "";
+  String answerVoiceName = "";
+  String answerVoiceLocale = "";
+
   @Backlink(to: 'studySet')
   final items = IsarLinks<Item>();
 }

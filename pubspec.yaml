@@ -43,6 +43,7 @@ dependencies:
   path_provider:
   record: ^4.4.4
   audioplayers: ^5.1.0
+  flutter_tts: ^3.8.3
 
 dev_dependencies:
   flutter_test:
