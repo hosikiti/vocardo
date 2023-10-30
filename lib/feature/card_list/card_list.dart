@@ -47,7 +47,6 @@ class _CardListPageState extends ConsumerState<CardListPage> {
                   value: "edit",
                   child: const Text("Edit"),
                   onTap: () {
-                    Navigator.of(context).pop();
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => const EditStudySet()));
                   },
