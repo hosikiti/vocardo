@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vocardo/core/service/card/card_list_provider.dart';
 import 'package:vocardo/core/service/card/practice_card_list_provider.dart';
 import 'package:vocardo/core/service/study_set/current_study_set_provider.dart';
+import 'package:vocardo/core/service/tts/tts_service.dart';
 import 'package:vocardo/core/util/text_util.dart';
 import 'package:vocardo/core/util/time_util.dart';
 import 'package:vocardo/core/widget/dialog_widget.dart';
@@ -99,9 +100,25 @@ class _CardListPageState extends ConsumerState<CardListPage> {
                             mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
                               ListTile(
-                                title: Text(card.question),
-                                titleTextStyle:
-                                    Theme.of(context).textTheme.titleLarge,
+                                title: Wrap(
+                                  crossAxisAlignment: WrapCrossAlignment.center,
+                                  children: [
+                                    Text(
+                                      card.question,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headlineSmall,
+                                    ),
+                                    IconButton(
+                                      onPressed: () {
+                                        ref
+                                            .read(currentTtsProvider.notifier)
+                                            .speakQuestion(card.question);
+                                      },
+                                      icon: const Icon(Icons.volume_up),
+                                    ),
+                                  ],
+                                ),
                                 subtitle: Text(cards[index].answer),
                               ),
                               Row(
