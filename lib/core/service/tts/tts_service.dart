@@ -36,6 +36,7 @@ class CurrentTts extends _$CurrentTts {
         set.questionVoiceLocale.isEmpty) {
       return;
     }
+    await state.awaitSpeakCompletion(true);
     await state.setLanguage(set.questionLanguage);
     await state.setVoice({
       "name": set.questionVoiceName,
@@ -52,6 +53,7 @@ class CurrentTts extends _$CurrentTts {
         set.answerVoiceLocale.isEmpty) {
       return;
     }
+    await state.awaitSpeakCompletion(true);
     await state.setLanguage(set.answerLanguage);
     await state.setVoice({
       "name": set.answerVoiceName,

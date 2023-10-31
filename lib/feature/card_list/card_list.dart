@@ -109,10 +109,13 @@ class _CardListPageState extends ConsumerState<CardListPage> {
                                           .headlineSmall,
                                     ),
                                     IconButton(
-                                      onPressed: () {
-                                        ref
+                                      onPressed: () async {
+                                        await ref
                                             .read(currentTtsProvider.notifier)
                                             .speakQuestion(card.question);
+                                        await ref
+                                            .read(currentTtsProvider.notifier)
+                                            .speakAnswer(card.answer);
                                       },
                                       icon: const Icon(Icons.volume_up),
                                     ),

@@ -11,8 +11,10 @@ class EditStudySet extends ConsumerStatefulWidget {
 }
 
 class _EditStudySetState extends ConsumerState<EditStudySet> {
-  String questionLanguage = "";
+  String? questionLanguage;
   Voice? questionVoice;
+  String? answerLanguage;
+  Voice? answerVoice;
 
   @override
   void initState() {
@@ -21,6 +23,10 @@ class _EditStudySetState extends ConsumerState<EditStudySet> {
     if (set.questionVoiceName.isNotEmpty &&
         set.questionVoiceLocale.isNotEmpty) {
       questionVoice = Voice(set.questionVoiceName, set.questionVoiceLocale);
+    }
+    answerLanguage = set.answerLanguage;
+    if (set.answerVoiceName.isNotEmpty && set.answerVoiceLocale.isNotEmpty) {
+      answerVoice = Voice(set.answerVoiceName, set.answerVoiceLocale);
     }
     super.initState();
   }
@@ -36,29 +42,55 @@ class _EditStudySetState extends ConsumerState<EditStudySet> {
         padding: const EdgeInsets.all(16.0),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           const Text("Question Language:"),
-          _buildLanguageSelect(),
+          _buildLanguageSelect(questionLanguage, (v) {
+            setState(() {
+              questionLanguage = v;
+              questionVoice = null;
+            });
+          }),
           const SizedBox(height: 16),
           const Text("Question Voice:"),
-          _buildVoiceSelect(),
+          _buildVoiceSelect(questionVoice, questionLanguage, (v) {
+            setState(() {
+              questionVoice = v;
+            });
+          }),
           const SizedBox(height: 16),
+          const Text("Answer Language:"),
+          _buildLanguageSelect(answerLanguage, (v) {
+            setState(() {
+              answerLanguage = v;
+            });
+          }),
+          const SizedBox(height: 16),
+          const Text("Answer Voice:"),
+          _buildVoiceSelect(answerVoice, answerLanguage, (v) {
+            setState(() {
+              answerVoice = v;
+            });
+          }),
           ElevatedButton(
-              onPressed: () {
-                if (questionVoice == null) {
-                  return;
-                }
-                set.questionLanguage = questionLanguage;
-                set.questionVoiceName = questionVoice!.name;
-                set.questionVoiceLocale = questionVoice!.locale;
-                ref.read(studySetListProvider.notifier).updateStudySet(set);
-                Navigator.of(context).pop();
-              },
+              onPressed: isValid()
+                  ? () {
+                      set.questionLanguage = questionLanguage!;
+                      set.questionVoiceName = questionVoice!.name;
+                      set.questionVoiceLocale = questionVoice!.locale;
+                      set.answerLanguage = answerLanguage!;
+                      set.answerVoiceName = answerVoice!.name;
+                      set.answerVoiceLocale = answerVoice!.locale;
+                      ref
+                          .read(studySetListProvider.notifier)
+                          .updateStudySet(set);
+                      Navigator.of(context).pop();
+                    }
+                  : null,
               child: const Text("Save"))
         ]),
       ),
     );
   }
 
-  Widget _buildLanguageSelect() {
+  Widget _buildLanguageSelect(String? value, void Function(String?) onChanged) {
     final future = ref.read(currentTtsProvider.notifier).getLanguageList();
     return FutureBuilder(
       future: future,
@@ -72,13 +104,8 @@ class _EditStudySetState extends ConsumerState<EditStudySet> {
           }).toList();
           return DropdownButton(
             items: items,
-            value: questionLanguage.isEmpty ? null : questionLanguage,
-            onChanged: (v) {
-              final lang = v ?? "";
-              setState(() {
-                questionLanguage = lang;
-              });
-            },
+            value: value,
+            onChanged: onChanged,
           );
         }
         return const CircularProgressIndicator();
@@ -86,35 +113,43 @@ class _EditStudySetState extends ConsumerState<EditStudySet> {
     );
   }
 
-  Widget _buildVoiceSelect() {
+  Widget _buildVoiceSelect(
+      Voice? value, String? selectedLanguage, void Function(Voice?) onChanged) {
     final future = ref.read(currentTtsProvider.notifier).getVoiceList();
     return FutureBuilder(
       future: future,
       builder: (_, snapshot) {
         if (snapshot.hasData) {
           final items = snapshot.data!.where((voice) {
-            if (questionLanguage.isEmpty) {
+            if (selectedLanguage == null) {
               return true;
             }
-            return voice.locale.startsWith(questionLanguage);
+            return voice.locale.startsWith(selectedLanguage);
           }).map((voice) {
             return DropdownMenuItem(
               value: voice,
               child: Text("${voice.locale} - ${voice.name}"),
             );
           }).toList();
+
           return DropdownButton(
             items: items,
-            value: questionVoice,
-            onChanged: (v) {
-              setState(() {
-                questionVoice = v;
-              });
-            },
+            value: value,
+            onChanged: onChanged,
           );
         }
         return const CircularProgressIndicator();
       },
     );
+  }
+
+  bool isValid() {
+    if (questionLanguage == null ||
+        questionVoice == null ||
+        answerLanguage == null ||
+        answerVoice == null) {
+      return false;
+    }
+    return true;
   }
 }
