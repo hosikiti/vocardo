@@ -49,7 +49,7 @@ class _EditPageState extends ConsumerState<EditPage> {
               controller: questionController,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
-                labelText: 'Card title',
+                labelText: 'Question (Front)',
               ),
             ),
             const SizedBox(height: 16),
@@ -59,7 +59,7 @@ class _EditPageState extends ConsumerState<EditPage> {
               maxLines: null,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
-                labelText: 'Card description',
+                labelText: 'Answer (Back)',
               ),
             ),
             const SizedBox(height: 16),

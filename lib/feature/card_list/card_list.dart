@@ -99,27 +99,10 @@ class _CardListPageState extends ConsumerState<CardListPage> {
                             mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
                               ListTile(
-                                title: Wrap(
-                                  crossAxisAlignment: WrapCrossAlignment.center,
-                                  children: [
-                                    Text(
-                                      card.question,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headlineSmall,
-                                    ),
-                                    IconButton(
-                                      onPressed: () async {
-                                        await ref
-                                            .read(currentTtsProvider.notifier)
-                                            .speakQuestion(card.question);
-                                        await ref
-                                            .read(currentTtsProvider.notifier)
-                                            .speakAnswer(card.answer);
-                                      },
-                                      icon: const Icon(Icons.volume_up),
-                                    ),
-                                  ],
+                                title: Text(
+                                  card.question,
+                                  style:
+                                      Theme.of(context).textTheme.headlineSmall,
                                 ),
                                 subtitle: Text(cards[index].answer),
                               ),
@@ -133,18 +116,38 @@ class _CardListPageState extends ConsumerState<CardListPage> {
                                       style: Theme.of(context)
                                           .textTheme
                                           .bodySmall),
+                                  const SizedBox(width: 8),
                                   IconButton(
-                                    icon: const Icon(Icons.delete),
                                     onPressed: () async {
-                                      final yes = await showOkCancelDialog(
-                                          context,
-                                          title: "Delete",
-                                          content: "Are you sure?");
-                                      if (!yes) return;
-
                                       await ref
-                                          .read(cardListProvider.notifier)
-                                          .deleteCard(cards[index]);
+                                          .read(currentTtsProvider.notifier)
+                                          .speakQuestion(card.question);
+                                      await ref
+                                          .read(currentTtsProvider.notifier)
+                                          .speakAnswer(card.answer);
+                                    },
+                                    icon: const Icon(Icons.volume_up),
+                                  ),
+                                  PopupMenuButton<String>(
+                                    itemBuilder: (BuildContext context) {
+                                      return [
+                                        PopupMenuItem(
+                                          value: "delete",
+                                          child: const Text("Delete"),
+                                          onTap: () async {
+                                            final yes =
+                                                await showOkCancelDialog(
+                                                    context,
+                                                    title: "Delete",
+                                                    content: "Are you sure?");
+                                            if (!yes) return;
+
+                                            await ref
+                                                .read(cardListProvider.notifier)
+                                                .deleteCard(cards[index]);
+                                          },
+                                        ),
+                                      ];
                                     },
                                   ),
                                   const SizedBox(width: 8),
