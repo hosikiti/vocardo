@@ -64,7 +64,7 @@ class StudySetListPage extends ConsumerWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            ElevatedButton.icon(
+                            FilledButton.icon(
                               onPressed: () {
                                 ref
                                     .read(currentStudySetProvider.notifier)
@@ -79,11 +79,10 @@ class StudySetListPage extends ConsumerWidget {
                               label: const Text(
                                 "PRACTICE",
                               ),
-                              icon: const Icon(Icons.play_arrow,
-                                  color: Color.fromRGBO(255, 255, 255, 1)),
+                              icon: const Icon(Icons.play_arrow),
                             ),
                             const SizedBox(width: 16),
-                            ElevatedButton.icon(
+                            OutlinedButton.icon(
                               onPressed: () {
                                 Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => EditPage(
@@ -94,20 +93,10 @@ class StudySetListPage extends ConsumerWidget {
                               label: const Text(
                                 "ADD",
                               ),
-                              icon: const Icon(Icons.add,
-                                  color: Color.fromRGBO(255, 255, 255, 1)),
+                              icon: const Icon(
+                                Icons.add,
+                              ),
                             ),
-                            IconButton(
-                                onPressed: () async {
-                                  final yes = await showOkCancelDialog(context,
-                                      content: "Are you sure?",
-                                      title: "Delete");
-                                  if (!yes) return;
-                                  final studySetProvider =
-                                      ref.read(studySetListProvider.notifier);
-                                  studySetProvider.deleteStudySet(set.id);
-                                },
-                                icon: const Icon(Icons.delete)),
                           ],
                         )
                       ],

@@ -8,12 +8,12 @@ Vocardo is a voice-recordable flashcard app, helping you learn a foreign languag
 
 ## Features to be implemented
 
-- [ ] Edit card.
-- [ ] Show the reverse side of card.
+- [x] Edit card.
+- [x] Show the reverse side of card.
 - [x] Add the idea of `study set`.
-- [ ] Add Text-to-Speech feature.
+- [x] Add Text-to-Speech feature.
 - [x] Imprement space repetition algorithm.
 - [ ] Feature to attach an audio URL to card.
 - [ ] Edit/Delete card while practicing.
-- [ ] Effective practice algorithm.
+- [x] Effective practice algorithm.
 - [ ] Export cards as CSV.

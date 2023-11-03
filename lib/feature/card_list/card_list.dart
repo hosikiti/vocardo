@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vocardo/core/service/card/card_list_provider.dart';
 import 'package:vocardo/core/service/card/practice_card_list_provider.dart';
 import 'package:vocardo/core/service/study_set/current_study_set_provider.dart';
+import 'package:vocardo/core/service/study_set/study_set_list_provider.dart';
 import 'package:vocardo/core/service/tts/tts_service.dart';
 import 'package:vocardo/core/util/text_util.dart';
 import 'package:vocardo/core/util/time_util.dart';
@@ -58,6 +59,24 @@ class _CardListPageState extends ConsumerState<CardListPage> {
                     Navigator.of(context).pop();
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => const ImportPage()));
+                  },
+                ),
+                PopupMenuItem(
+                  value: "Delete This Set",
+                  child: const Text("Delete This Set",
+                      style: TextStyle(color: Colors.red)),
+                  onTap: () async {
+                    final yes = await showOkCancelDialog(context,
+                        content: "Are you sure?", title: "Delete");
+                    if (!yes) return;
+                    final set = ref.read(currentStudySetProvider);
+                    final studySetProvider =
+                        ref.read(studySetListProvider.notifier);
+                    studySetProvider.deleteStudySet(set.id);
+                    if (!mounted) {
+                      return;
+                    }
+                    Navigator.of(context).pop();
                   },
                 ),
               ];
