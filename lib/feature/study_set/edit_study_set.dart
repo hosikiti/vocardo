@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:vocardo/core/model/study_set.dart';
 import 'package:vocardo/core/service/study_set/current_study_set_provider.dart';
 import 'package:vocardo/core/service/study_set/study_set_list_provider.dart';
 import 'package:vocardo/core/service/tts/tts_service.dart';
@@ -34,42 +35,78 @@ class _EditStudySetState extends ConsumerState<EditStudySet> {
   @override
   Widget build(BuildContext context) {
     final set = ref.watch(currentStudySetProvider);
+
+    final futureLang = ref.read(currentTtsProvider.notifier).getLanguageList();
+    final futureVoice = ref.read(currentTtsProvider.notifier).getVoiceList();
+    final futureWait = Future.wait([futureLang, futureVoice]);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Edit"),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          const Text("Question Language:"),
-          _buildLanguageSelect(questionLanguage, (v) {
-            setState(() {
-              questionLanguage = v;
-              questionVoice = null;
-            });
-          }),
-          const SizedBox(height: 16),
-          const Text("Question Voice:"),
-          _buildVoiceSelect(questionVoice, questionLanguage, (v) {
-            setState(() {
-              questionVoice = v;
-            });
-          }),
-          const SizedBox(height: 16),
-          const Text("Answer Language:"),
-          _buildLanguageSelect(answerLanguage, (v) {
-            setState(() {
-              answerLanguage = v;
-            });
-          }),
-          const SizedBox(height: 16),
-          const Text("Answer Voice:"),
-          _buildVoiceSelect(answerVoice, answerLanguage, (v) {
-            setState(() {
-              answerVoice = v;
-            });
-          }),
-          ElevatedButton(
+        child: FutureBuilder(
+          future: futureWait,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              final langs = snapshot.data![0] as List<String>;
+              final voices = snapshot.data![1] as List<Voice>;
+              return _buildBody(set, langs, voices);
+            }
+            return const Center(child: CircularProgressIndicator());
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBody(StudySet set, List<String> languages, List<Voice> voices) {
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      const Text("Question Language:"),
+      _buildLanguageSelect(languages, questionLanguage, (v) {
+        setState(() {
+          questionLanguage = v;
+          questionVoice = null;
+        });
+      }),
+      const SizedBox(height: 24),
+      const Text("Question Voice:"),
+      _buildVoiceSelect(voices, questionVoice, questionLanguage, (v) {
+        setState(() {
+          questionVoice = v;
+        });
+      }),
+      const SizedBox(height: 24),
+      const Text("Answer Language:"),
+      _buildLanguageSelect(languages, answerLanguage, (v) {
+        setState(() {
+          answerLanguage = v;
+          answerVoice = null;
+        });
+      }),
+      const SizedBox(height: 24),
+      const Text("Answer Voice:"),
+      _buildVoiceSelect(voices, answerVoice, answerLanguage, (v) {
+        setState(() {
+          answerVoice = v;
+        });
+      }),
+      const SizedBox(height: 24),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Expanded(
+              child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text("Cancel"))),
+          const SizedBox(
+            width: 16,
+          ),
+          Expanded(
+            child: FilledButton(
               onPressed: isValid()
                   ? () {
                       set.questionLanguage = questionLanguage!;
@@ -84,62 +121,47 @@ class _EditStudySetState extends ConsumerState<EditStudySet> {
                       Navigator.of(context).pop();
                     }
                   : null,
-              child: const Text("Save"))
-        ]),
-      ),
+              child: const Text("Save"),
+            ),
+          )
+        ],
+      )
+    ]);
+  }
+
+  Widget _buildLanguageSelect(
+      List<String> languages, String? value, void Function(String?) onChanged) {
+    final items = languages.map((lang) {
+      return DropdownMenuItem(
+        value: lang,
+        child: Text(lang),
+      );
+    }).toList();
+    return DropdownButton(
+      items: items,
+      value: value,
+      onChanged: onChanged,
     );
   }
 
-  Widget _buildLanguageSelect(String? value, void Function(String?) onChanged) {
-    final future = ref.read(currentTtsProvider.notifier).getLanguageList();
-    return FutureBuilder(
-      future: future,
-      builder: (_, snapshot) {
-        if (snapshot.hasData) {
-          final items = snapshot.data!.map((lang) {
-            return DropdownMenuItem(
-              value: lang,
-              child: Text(lang),
-            );
-          }).toList();
-          return DropdownButton(
-            items: items,
-            value: value,
-            onChanged: onChanged,
-          );
-        }
-        return const CircularProgressIndicator();
-      },
-    );
-  }
+  Widget _buildVoiceSelect(List<Voice> voices, Voice? value,
+      String? selectedLanguage, void Function(Voice?) onChanged) {
+    final items = voices.where((voice) {
+      if (selectedLanguage == null) {
+        return true;
+      }
+      return voice.locale.startsWith(selectedLanguage);
+    }).map((voice) {
+      return DropdownMenuItem(
+        value: voice,
+        child: Text("${voice.locale} - ${voice.name}"),
+      );
+    }).toList();
 
-  Widget _buildVoiceSelect(
-      Voice? value, String? selectedLanguage, void Function(Voice?) onChanged) {
-    final future = ref.read(currentTtsProvider.notifier).getVoiceList();
-    return FutureBuilder(
-      future: future,
-      builder: (_, snapshot) {
-        if (snapshot.hasData) {
-          final items = snapshot.data!.where((voice) {
-            if (selectedLanguage == null) {
-              return true;
-            }
-            return voice.locale.startsWith(selectedLanguage);
-          }).map((voice) {
-            return DropdownMenuItem(
-              value: voice,
-              child: Text("${voice.locale} - ${voice.name}"),
-            );
-          }).toList();
-
-          return DropdownButton(
-            items: items,
-            value: value,
-            onChanged: onChanged,
-          );
-        }
-        return const CircularProgressIndicator();
-      },
+    return DropdownButton(
+      items: items,
+      value: value,
+      onChanged: onChanged,
     );
   }
 
