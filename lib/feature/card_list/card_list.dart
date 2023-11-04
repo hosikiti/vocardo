@@ -86,103 +86,21 @@ class _CardListPageState extends ConsumerState<CardListPage> {
       ),
       body: cardsRef.when(
         data: (cards) {
-          return ListView.builder(
-            itemBuilder: (context, index) {
-              final card = cards[index];
-              return InkWell(
-                onTap: () {
-                  final studySet = ref.read(currentStudySetProvider);
+          if (cards.isEmpty) {
+            return Center(
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  final set = ref.read(currentStudySetProvider);
                   Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => EditPage(
-                          studySet: studySet, initialItem: cards[index])));
+                      builder: (context) => EditPage(studySet: set)));
                 },
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Card(
-                    elevation: 8,
-                    child: Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8),
-                          child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.circle,
-                                  color: Theme.of(context).colorScheme.shadow,
-                                )
-                              ]),
-                        ),
-                        Expanded(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              ListTile(
-                                title: Text(
-                                  card.question,
-                                  style:
-                                      Theme.of(context).textTheme.headlineSmall,
-                                ),
-                                subtitle: Text(cards[index].answer),
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: <Widget>[
-                                  Text(
-                                      (card.reviewAfter != null
-                                          ? "Review in ${whenIsIt(card.reviewAfter!)}"
-                                          : ""),
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodySmall),
-                                  const SizedBox(width: 8),
-                                  IconButton(
-                                    onPressed: () async {
-                                      await ref
-                                          .read(currentTtsProvider.notifier)
-                                          .speakQuestion(card.question);
-                                      await ref
-                                          .read(currentTtsProvider.notifier)
-                                          .speakAnswer(card.answer);
-                                    },
-                                    icon: const Icon(Icons.volume_up),
-                                  ),
-                                  PopupMenuButton<String>(
-                                    itemBuilder: (BuildContext context) {
-                                      return [
-                                        PopupMenuItem(
-                                          value: "delete",
-                                          child: const Text("Delete"),
-                                          onTap: () async {
-                                            final yes =
-                                                await showOkCancelDialog(
-                                                    context,
-                                                    title: "Delete",
-                                                    content: "Are you sure?");
-                                            if (!yes) return;
+                label: const Text("ADD A NEW CARD"),
+                icon: const Icon(Icons.add),
+              ),
+            );
+          }
 
-                                            await ref
-                                                .read(cardListProvider.notifier)
-                                                .deleteCard(cards[index]);
-                                          },
-                                        ),
-                                      ];
-                                    },
-                                  ),
-                                  const SizedBox(width: 8),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              );
-            },
-            itemCount: cards.length,
-          );
+          return _buildCardList(cards);
         },
         error: (_, __) {
           return const Text("Error");
@@ -206,7 +124,7 @@ class _CardListPageState extends ConsumerState<CardListPage> {
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => EditPage(studySet: set)));
                 },
-                tooltip: 'Add a new word',
+                tooltip: 'Add a new card',
                 child: const Icon(Icons.add),
               ),
               const SizedBox(width: 16),
@@ -226,6 +144,102 @@ class _CardListPageState extends ConsumerState<CardListPage> {
               ),
             ]),
       ),
+    );
+  }
+
+  Widget _buildCardList(List<CardItem> cards) {
+    return ListView.builder(
+      itemBuilder: (context, index) {
+        final card = cards[index];
+        return InkWell(
+          onTap: () {
+            final studySet = ref.read(currentStudySetProvider);
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) =>
+                    EditPage(studySet: studySet, initialItem: cards[index])));
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Card(
+              elevation: 8,
+              child: Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.circle,
+                            color: Theme.of(context).colorScheme.shadow,
+                          )
+                        ]),
+                  ),
+                  Expanded(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        ListTile(
+                          title: Text(
+                            card.question,
+                            style: Theme.of(context).textTheme.headlineSmall,
+                          ),
+                          subtitle: Text(cards[index].answer),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: <Widget>[
+                            Text(
+                                (card.reviewAfter != null
+                                    ? "Review in ${whenIsIt(card.reviewAfter!)}"
+                                    : ""),
+                                style: Theme.of(context).textTheme.bodySmall),
+                            const SizedBox(width: 8),
+                            IconButton(
+                              onPressed: () async {
+                                await ref
+                                    .read(currentTtsProvider.notifier)
+                                    .speakQuestion(card.question);
+                                await ref
+                                    .read(currentTtsProvider.notifier)
+                                    .speakAnswer(card.answer);
+                              },
+                              icon: const Icon(Icons.volume_up),
+                            ),
+                            PopupMenuButton<String>(
+                              itemBuilder: (BuildContext context) {
+                                return [
+                                  PopupMenuItem(
+                                    value: "delete",
+                                    child: const Text("Delete"),
+                                    onTap: () async {
+                                      final yes = await showOkCancelDialog(
+                                          context,
+                                          title: "Delete",
+                                          content: "Are you sure?");
+                                      if (!yes) return;
+
+                                      await ref
+                                          .read(cardListProvider.notifier)
+                                          .deleteCard(cards[index]);
+                                    },
+                                  ),
+                                ];
+                              },
+                            ),
+                            const SizedBox(width: 8),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+      itemCount: cards.length,
     );
   }
 }
