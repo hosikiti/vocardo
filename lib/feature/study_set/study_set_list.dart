@@ -65,17 +65,22 @@ class StudySetListPage extends ConsumerWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             FilledButton.icon(
-                              onPressed: () {
-                                ref
-                                    .read(currentStudySetProvider.notifier)
-                                    .setStudySet(set);
-                                ref
-                                    .read(practiceCardListProvider.notifier)
-                                    .init();
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) =>
-                                        const PracticePage()));
-                              },
+                              onPressed: set.items.isNotEmpty
+                                  ? () {
+                                      ref
+                                          .read(
+                                              currentStudySetProvider.notifier)
+                                          .setStudySet(set);
+                                      ref
+                                          .read(
+                                              practiceCardListProvider.notifier)
+                                          .init();
+                                      Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const PracticePage()));
+                                    }
+                                  : null,
                               label: const Text(
                                 "PRACTICE",
                               ),
