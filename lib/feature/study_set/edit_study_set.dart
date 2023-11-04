@@ -20,12 +20,13 @@ class _EditStudySetState extends ConsumerState<EditStudySet> {
   @override
   void initState() {
     final set = ref.read(currentStudySetProvider);
-    questionLanguage = set.questionLanguage;
+    questionLanguage =
+        set.questionLanguage.isEmpty ? null : set.questionLanguage;
     if (set.questionVoiceName.isNotEmpty &&
         set.questionVoiceLocale.isNotEmpty) {
       questionVoice = Voice(set.questionVoiceName, set.questionVoiceLocale);
     }
-    answerLanguage = set.answerLanguage;
+    answerLanguage = set.answerLanguage.isEmpty ? null : set.answerLanguage;
     if (set.answerVoiceName.isNotEmpty && set.answerVoiceLocale.isNotEmpty) {
       answerVoice = Voice(set.answerVoiceName, set.answerVoiceLocale);
     }
