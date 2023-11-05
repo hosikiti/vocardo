@@ -4,10 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vocardo/core/service/card/card_list_provider.dart';
 import 'package:vocardo/core/service/card/current_card_provider.dart';
+import 'package:vocardo/core/service/card/practice_card_list_provider.dart';
+import 'package:vocardo/core/service/study_set/current_study_set_provider.dart';
 import 'package:vocardo/core/service/tts/tts_service.dart';
 import 'package:vocardo/core/util/repetition_util.dart';
 import 'package:vocardo/core/widget/dialog_widget.dart';
 import 'package:vocardo/core/widget/recording_dialog_widget.dart';
+import 'package:vocardo/feature/edit/edit.dart';
 
 import '../../core/service/card/card_service.dart';
 
@@ -30,6 +33,28 @@ class _PracticePageState extends ConsumerState<PracticePage> {
             PopupMenuButton<String>(
               itemBuilder: (BuildContext context) {
                 return [
+                  PopupMenuItem(
+                    value: "edit",
+                    child: const Text("Edit this card"),
+                    onTap: () async {
+                      final currentCard = card.valueOrNull;
+                      if (currentCard == null) {
+                        return;
+                      }
+
+                      final studySet = ref.read(currentStudySetProvider);
+                      if (!mounted) {
+                        return;
+                      }
+                      await Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => EditPage(
+                              studySet: studySet, initialItem: currentCard)));
+
+                      ref
+                          .read(practiceCardListProvider.notifier)
+                          .updateCard(currentCard.id);
+                    },
+                  ),
                   PopupMenuItem(
                     value: "delete",
                     child: const Text("Delete this card"),

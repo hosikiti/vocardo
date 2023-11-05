@@ -53,6 +53,23 @@ class PracticeCardList extends _$PracticeCardList {
     return cardService.fromModel(picked);
   }
 
+  updateCard(int id) async {
+    state = const AsyncLoading();
+    final isar = await ref.read(isarProvider.future);
+    final card = await isar.items.get(id);
+    if (card == null) {
+      return;
+    }
+    state = await AsyncValue.guard(() async {
+      if (state.valueOrNull == null) {
+        return [];
+      }
+      return state.valueOrNull!
+          .map((e) => e.id == id ? CardItem.fromModel(card) : e)
+          .toList();
+    });
+  }
+
   init() async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {

@@ -90,7 +90,7 @@ class _EditPageState extends ConsumerState<EditPage> {
         answer: answer,
       );
 
-      cards.updateCard(card);
+      await cards.updateCard(card);
     } else {
       final cardService = await ref.read(cardServiceProvider.future);
       cardService.addCard(
