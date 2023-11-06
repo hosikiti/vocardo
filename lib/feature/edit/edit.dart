@@ -91,7 +91,7 @@ class _EditPageState extends ConsumerState<EditPage> {
                     if (!mounted) {
                       return;
                     }
-                    showToast(context, "Card added!");
+                    showToast(context, "Card ${_isEdit ? "updated" : "added"}");
                     Navigator.pop(context);
                   },
                   child: Text(_isEdit ? "Update" : "Add"))
