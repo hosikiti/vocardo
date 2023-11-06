@@ -88,7 +88,7 @@ class _CardListPageState extends ConsumerState<CardListPage> {
         data: (cards) {
           if (cards.isEmpty) {
             return Center(
-              child: ElevatedButton.icon(
+              child: FilledButton.icon(
                 onPressed: () {
                   final set = ref.read(currentStudySetProvider);
                   Navigator.of(context).push(MaterialPageRoute(

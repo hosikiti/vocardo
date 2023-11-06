@@ -20,7 +20,7 @@ class StudySetListPage extends ConsumerWidget {
     return data.when(data: (sets) {
       if (sets.isEmpty) {
         return Center(
-          child: ElevatedButton.icon(
+          child: FilledButton.icon(
             onPressed: () {
               showModalBottomSheet(
                   isScrollControlled: true,
