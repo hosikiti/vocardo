@@ -25,8 +25,7 @@ class Voice {
 class CurrentTts extends _$CurrentTts {
   @override
   FlutterTts build() {
-    final tts = FlutterTts();
-    return tts;
+    return FlutterTts();
   }
 
   Future<void> speakQuestion(String text) async {

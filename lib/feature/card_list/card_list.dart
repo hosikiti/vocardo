@@ -34,7 +34,8 @@ class _CardListPageState extends ConsumerState<CardListPage> {
             const noCards = Text("No cards yet!");
             return cardsRef.when(
                 data: (cards) => cards.isNotEmpty
-                    ? Text("${cards.length} ${cardOrCards(cards.length)}")
+                    ? Text(
+                        "${cards.length} ${unitText(cards.length, "card", "cards")}")
                     : noCards,
                 error: (_, __) => noCards,
                 loading: () => const CircularProgressIndicator());
