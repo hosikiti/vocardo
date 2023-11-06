@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vocardo/core/model/study_set.dart';
 import 'package:vocardo/core/service/card/card_list_provider.dart';
 import 'package:vocardo/core/service/card/card_service.dart';
+import 'package:vocardo/core/widget/toast_widget.dart';
 
 class EditPage extends ConsumerStatefulWidget {
   final CardItem? initialItem;
@@ -17,17 +18,18 @@ class EditPage extends ConsumerStatefulWidget {
 }
 
 class _EditPageState extends ConsumerState<EditPage> {
-  final questionController = TextEditingController();
-  final answerController = TextEditingController();
-  bool isEdit = false;
+  final _questionController = TextEditingController();
+  final _answerController = TextEditingController();
+  bool _isEdit = false;
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     // set initial item data
     if (widget.initialItem != null) {
-      questionController.text = widget.initialItem!.question;
-      answerController.text = widget.initialItem!.answer;
-      isEdit = true;
+      _questionController.text = widget.initialItem!.question;
+      _answerController.text = widget.initialItem!.answer;
+      _isEdit = true;
     }
 
     super.initState();
@@ -37,45 +39,64 @@ class _EditPageState extends ConsumerState<EditPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(isEdit ? "Edit" : "Add"),
+        title: Text(_isEdit ? "Edit" : "Add"),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            TextField(
-              controller: questionController,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Question (Front)',
-              ),
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: answerController,
-              keyboardType: TextInputType.multiline,
-              maxLines: null,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Answer (Back)',
-              ),
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-                onPressed: () async {
-                  if (questionController.text.isEmpty ||
-                      answerController.text.isEmpty) return;
-                  await addOrUpdate(
-                      questionController.text, answerController.text);
-                  if (!mounted) {
-                    return;
+      body: Form(
+        key: _formKey,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              TextFormField(
+                controller: _questionController,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Please enter a question";
                   }
-                  Navigator.pop(context);
+                  return null;
                 },
-                child: Text(isEdit ? "Update" : "Add"))
-          ],
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Question (Front)',
+                ),
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: _answerController,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Please enter an answer";
+                  }
+                  return null;
+                },
+                keyboardType: TextInputType.multiline,
+                maxLines: null,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Answer (Back)',
+                ),
+              ),
+              const SizedBox(height: 16),
+              FilledButton(
+                  onPressed: () async {
+                    if (!_formKey.currentState!.validate()) {
+                      return;
+                    }
+
+                    await addOrUpdate(
+                        _questionController.text, _answerController.text);
+
+                    if (!mounted) {
+                      return;
+                    }
+                    showToast(context, "Card added!");
+                    Navigator.pop(context);
+                  },
+                  child: Text(_isEdit ? "Update" : "Add"))
+            ],
+          ),
         ),
       ),
     );
