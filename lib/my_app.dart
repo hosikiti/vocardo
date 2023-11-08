@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vocardo/core/service/study_set/study_set_list_provider.dart';
+import 'package:vocardo/feature/config/config.dart';
 import 'package:vocardo/feature/study_set/add_study_set_dialog.dart';
 import 'package:vocardo/feature/study_set/study_set_list.dart';
 
@@ -73,8 +74,8 @@ class MyDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Drawer(
       child: ListView(
-        children: const <Widget>[
-          DrawerHeader(
+        children: <Widget>[
+          const DrawerHeader(
             child: Text(
               'Vocardo',
               style: TextStyle(
@@ -82,6 +83,22 @@ class MyDrawer extends StatelessWidget {
               ),
             ),
           ),
+          Column(
+            children: [
+              ListTile(
+                title: const Text('Settings'),
+                onTap: () {
+                  // navigate to config page
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const ConfigPage()));
+                },
+              ),
+              const ListTile(
+                title: Text('About'),
+                onTap: null,
+              ),
+            ],
+          )
         ],
       ),
     );

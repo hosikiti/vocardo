@@ -1,26 +1,26 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'practice_card_list_provider.dart';
+part of 'config_service.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$practiceCardListHash() => r'69273c8db6e2c72f054cc982493fd691808a199d';
+String _$configServiceHash() => r'99c6845f18090c47045c499f6444e4e4f32c354c';
 
-/// See also [PracticeCardList].
-@ProviderFor(PracticeCardList)
-final practiceCardListProvider =
-    AsyncNotifierProvider<PracticeCardList, List<CardItem>>.internal(
-  PracticeCardList.new,
-  name: r'practiceCardListProvider',
+/// See also [ConfigService].
+@ProviderFor(ConfigService)
+final configServiceProvider =
+    StreamNotifierProvider<ConfigService, Config>.internal(
+  ConfigService.new,
+  name: r'configServiceProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$practiceCardListHash,
+      : _$configServiceHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$PracticeCardList = AsyncNotifier<List<CardItem>>;
+typedef _$ConfigService = StreamNotifier<Config>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

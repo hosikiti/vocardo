@@ -2,9 +2,11 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:vocardo/core/model/config.dart';
 import 'package:vocardo/core/service/card/card_list_provider.dart';
 import 'package:vocardo/core/service/card/current_card_provider.dart';
 import 'package:vocardo/core/service/card/practice_card_list_provider.dart';
+import 'package:vocardo/core/service/config/config_service.dart';
 import 'package:vocardo/core/service/study_set/current_study_set_provider.dart';
 import 'package:vocardo/core/service/tts/tts_service.dart';
 import 'package:vocardo/core/util/repetition_util.dart';
@@ -193,10 +195,14 @@ class _PracticePageState extends ConsumerState<PracticePage> {
     }
 
     ref.read(currentCardProvider.notifier).next();
-    setState(() {
-      // show the back side randomly
-      showAnswer = Random().nextBool();
-    });
+
+    final conf = ref.read(configServiceProvider).valueOrNull ?? defaultConfig;
+    if (conf.showAnswerRandomly) {
+      setState(() {
+        // show the back side randomly
+        showAnswer = Random().nextBool();
+      });
+    }
   }
 
   Widget _buildCard(CardItem card) {
