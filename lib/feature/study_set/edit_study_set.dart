@@ -4,6 +4,7 @@ import 'package:vocardo/core/model/study_set.dart';
 import 'package:vocardo/core/service/study_set/current_study_set_provider.dart';
 import 'package:vocardo/core/service/study_set/study_set_list_provider.dart';
 import 'package:vocardo/core/service/tts/tts_service.dart';
+import 'package:vocardo/core/widget/toast_widget.dart';
 
 class EditStudySet extends ConsumerStatefulWidget {
   const EditStudySet({Key? key}) : super(key: key);
@@ -12,6 +13,8 @@ class EditStudySet extends ConsumerStatefulWidget {
 }
 
 class _EditStudySetState extends ConsumerState<EditStudySet> {
+  final formKey = GlobalKey<FormState>();
+  final TextEditingController studySetController = TextEditingController();
   String? questionLanguage;
   Voice? questionVoice;
   String? answerLanguage;
@@ -20,6 +23,7 @@ class _EditStudySetState extends ConsumerState<EditStudySet> {
   @override
   void initState() {
     final set = ref.read(currentStudySetProvider);
+    studySetController.text = set.name;
     questionLanguage =
         set.questionLanguage.isEmpty ? null : set.questionLanguage;
     if (set.questionVoiceName.isNotEmpty &&
@@ -63,71 +67,89 @@ class _EditStudySetState extends ConsumerState<EditStudySet> {
   }
 
   Widget _buildBody(StudySet set, List<String> languages, List<Voice> voices) {
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      const Text("Question Language:"),
-      _buildLanguageSelect(languages, questionLanguage, (v) {
-        setState(() {
-          questionLanguage = v;
-          questionVoice = null;
-        });
-      }),
-      const SizedBox(height: 24),
-      const Text("Question Voice:"),
-      _buildVoiceSelect(voices, questionVoice, questionLanguage, (v) {
-        setState(() {
-          questionVoice = v;
-        });
-      }),
-      const SizedBox(height: 24),
-      const Text("Answer Language:"),
-      _buildLanguageSelect(languages, answerLanguage, (v) {
-        setState(() {
-          answerLanguage = v;
-          answerVoice = null;
-        });
-      }),
-      const SizedBox(height: 24),
-      const Text("Answer Voice:"),
-      _buildVoiceSelect(voices, answerVoice, answerLanguage, (v) {
-        setState(() {
-          answerVoice = v;
-        });
-      }),
-      const SizedBox(height: 24),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          Expanded(
-              child: ElevatedButton(
+    return Form(
+      key: formKey,
+      child: SingleChildScrollView(
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          const SizedBox(height: 8),
+          TextFormField(
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: "Study Set Name",
+            ),
+            validator: (value) => value == null || value.isEmpty
+                ? "Please enter a study set name"
+                : null,
+            controller: studySetController,
+          ),
+          const SizedBox(height: 24),
+          const Text("Question Language:"),
+          _buildLanguageSelect(languages, questionLanguage, (v) {
+            setState(() {
+              questionLanguage = v;
+              questionVoice = null;
+            });
+          }),
+          const SizedBox(height: 24),
+          const Text("Question Voice:"),
+          _buildVoiceSelect(voices, questionVoice, questionLanguage, (v) {
+            setState(() {
+              questionVoice = v;
+            });
+          }),
+          const SizedBox(height: 24),
+          const Text("Answer Language:"),
+          _buildLanguageSelect(languages, answerLanguage, (v) {
+            setState(() {
+              answerLanguage = v;
+              answerVoice = null;
+            });
+          }),
+          const SizedBox(height: 24),
+          const Text("Answer Voice:"),
+          _buildVoiceSelect(voices, answerVoice, answerLanguage, (v) {
+            setState(() {
+              answerVoice = v;
+            });
+          }),
+          const SizedBox(height: 24),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Expanded(
+                  child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text("Cancel"))),
+              const SizedBox(
+                width: 16,
+              ),
+              Expanded(
+                child: FilledButton(
                   onPressed: () {
+                    if (isValid() == false) {
+                      showToast(context, "Please fill in all fields");
+                      return;
+                    }
+                    set.name = studySetController.text;
+                    set.questionLanguage = questionLanguage!;
+                    set.questionVoiceName = questionVoice!.name;
+                    set.questionVoiceLocale = questionVoice!.locale;
+                    set.answerLanguage = answerLanguage!;
+                    set.answerVoiceName = answerVoice!.name;
+                    set.answerVoiceLocale = answerVoice!.locale;
+                    ref.read(studySetListProvider.notifier).updateStudySet(set);
                     Navigator.of(context).pop();
                   },
-                  child: const Text("Cancel"))),
-          const SizedBox(
-            width: 16,
-          ),
-          Expanded(
-            child: FilledButton(
-              onPressed: isValid()
-                  ? () {
-                      set.questionLanguage = questionLanguage!;
-                      set.questionVoiceName = questionVoice!.name;
-                      set.questionVoiceLocale = questionVoice!.locale;
-                      set.answerLanguage = answerLanguage!;
-                      set.answerVoiceName = answerVoice!.name;
-                      set.answerVoiceLocale = answerVoice!.locale;
-                      ref
-                          .read(studySetListProvider.notifier)
-                          .updateStudySet(set);
-                      Navigator.of(context).pop();
-                    }
-                  : null,
-              child: const Text("Save"),
-            ),
+                  child: const Text("Save"),
+                ),
+              )
+            ],
           )
-        ],
-      )
-    ]);
+        ]),
+      ),
+    );
   }
 
   Widget _buildLanguageSelect(
@@ -167,6 +189,9 @@ class _EditStudySetState extends ConsumerState<EditStudySet> {
   }
 
   bool isValid() {
+    if (formKey.currentState == null || !formKey.currentState!.validate()) {
+      return false;
+    }
     if (questionLanguage == null ||
         questionVoice == null ||
         answerLanguage == null ||
