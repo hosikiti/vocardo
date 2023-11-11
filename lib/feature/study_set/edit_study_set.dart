@@ -127,20 +127,31 @@ class _EditStudySetState extends ConsumerState<EditStudySet> {
               ),
               Expanded(
                 child: FilledButton(
-                  onPressed: () {
+                  onPressed: () async {
                     if (isValid() == false) {
                       showToast(context, "Please fill in all fields");
                       return;
                     }
-                    set.name = studySetController.text;
-                    set.questionLanguage = questionLanguage!;
-                    set.questionVoiceName = questionVoice!.name;
-                    set.questionVoiceLocale = questionVoice!.locale;
-                    set.answerLanguage = answerLanguage!;
-                    set.answerVoiceName = answerVoice!.name;
-                    set.answerVoiceLocale = answerVoice!.locale;
-                    ref.read(studySetListProvider.notifier).updateStudySet(set);
-                    Navigator.of(context).pop();
+                    try {
+                      set.name = studySetController.text;
+                      set.questionLanguage = questionLanguage!;
+                      set.questionVoiceName = questionVoice!.name;
+                      set.questionVoiceLocale = questionVoice!.locale;
+                      set.answerLanguage = answerLanguage!;
+                      set.answerVoiceName = answerVoice!.name;
+                      set.answerVoiceLocale = answerVoice!.locale;
+                      await ref
+                          .read(studySetListProvider.notifier)
+                          .updateStudySet(set);
+                      if (!mounted) {
+                        return;
+                      }
+                      showToast(context, "Study set updated");
+                      Navigator.of(context).pop();
+                    } catch (e) {
+                      showToast(context, "Error updating study set");
+                      return;
+                    }
                   },
                   child: const Text("Save"),
                 ),
