@@ -20,4 +20,5 @@ Vocardo is a voice-recordable flashcard app, helping you learn a foreign languag
 - [ ] Export cards as CSV.
 - [ ] Feature to attach an audio URL to card.
 - [ ] Add an app icon.
+- [ ] Add an about page.
 - [x] Make the feature to show the reverse side of card configurable.
