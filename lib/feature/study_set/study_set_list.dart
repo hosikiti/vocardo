@@ -7,7 +7,7 @@ import 'package:vocardo/core/util/text_util.dart';
 import 'package:vocardo/feature/card_list/card_list.dart';
 import 'package:vocardo/feature/edit/edit.dart';
 import 'package:vocardo/feature/practice/practice.dart';
-import 'package:vocardo/feature/study_set/add_study_set_dialog.dart';
+import 'package:vocardo/feature/study_set/edit_study_set.dart';
 
 class StudySetListPage extends ConsumerWidget {
   const StudySetListPage({super.key});
@@ -22,12 +22,9 @@ class StudySetListPage extends ConsumerWidget {
         return Center(
           child: FilledButton.icon(
             onPressed: () {
-              showModalBottomSheet(
-                  isScrollControlled: true,
-                  context: context,
-                  builder: (context) {
-                    return const AddStudySetDialog();
-                  });
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => const EditStudySet(),
+              ));
             },
             label: const Text("CREATE A NEW SET"),
             icon: const Icon(Icons.add),

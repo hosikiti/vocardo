@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vocardo/core/model/study_set.dart';
-import 'package:vocardo/core/service/study_set/current_study_set_provider.dart';
 import 'package:vocardo/core/service/study_set/study_set_list_provider.dart';
 import 'package:vocardo/core/service/tts/tts_service.dart';
 import 'package:vocardo/core/widget/toast_widget.dart';
 
 class EditStudySet extends ConsumerStatefulWidget {
-  const EditStudySet({Key? key}) : super(key: key);
+  final StudySet? initialData;
+
+  const EditStudySet({Key? key, this.initialData}) : super(key: key);
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _EditStudySetState();
 }
@@ -19,10 +20,15 @@ class _EditStudySetState extends ConsumerState<EditStudySet> {
   Voice? questionVoice;
   String? answerLanguage;
   Voice? answerVoice;
+  late final isEdit = widget.initialData != null;
 
   @override
   void initState() {
-    final set = ref.read(currentStudySetProvider);
+    final set = widget.initialData;
+
+    if (set == null) {
+      return;
+    }
     studySetController.text = set.name;
     questionLanguage =
         set.questionLanguage.isEmpty ? null : set.questionLanguage;
@@ -39,15 +45,13 @@ class _EditStudySetState extends ConsumerState<EditStudySet> {
 
   @override
   Widget build(BuildContext context) {
-    final set = ref.watch(currentStudySetProvider);
-
     final futureLang = ref.read(currentTtsProvider.notifier).getLanguageList();
     final futureVoice = ref.read(currentTtsProvider.notifier).getVoiceList();
     final futureWait = Future.wait([futureLang, futureVoice]);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Edit"),
+        title: Text(isEdit ? "Edit Set" : "Add Set"),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -57,7 +61,7 @@ class _EditStudySetState extends ConsumerState<EditStudySet> {
             if (snapshot.hasData) {
               final langs = snapshot.data![0] as List<String>;
               final voices = snapshot.data![1] as List<Voice>;
-              return _buildBody(set, langs, voices);
+              return _buildBody(widget.initialData, langs, voices);
             }
             return const Center(child: CircularProgressIndicator());
           },
@@ -66,7 +70,7 @@ class _EditStudySetState extends ConsumerState<EditStudySet> {
     );
   }
 
-  Widget _buildBody(StudySet set, List<String> languages, List<Voice> voices) {
+  Widget _buildBody(StudySet? set, List<String> languages, List<Voice> voices) {
     return Form(
       key: formKey,
       child: SingleChildScrollView(
@@ -133,23 +137,29 @@ class _EditStudySetState extends ConsumerState<EditStudySet> {
                       return;
                     }
                     try {
-                      set.name = studySetController.text;
-                      set.questionLanguage = questionLanguage!;
-                      set.questionVoiceName = questionVoice!.name;
-                      set.questionVoiceLocale = questionVoice!.locale;
-                      set.answerLanguage = answerLanguage!;
-                      set.answerVoiceName = answerVoice!.name;
-                      set.answerVoiceLocale = answerVoice!.locale;
+                      final data = set ?? StudySet();
+                      data.name = studySetController.text;
+                      data.questionLanguage = questionLanguage!;
+                      data.questionVoiceName = questionVoice!.name;
+                      data.questionVoiceLocale = questionVoice!.locale;
+                      data.answerLanguage = answerLanguage!;
+                      data.answerVoiceName = answerVoice!.name;
+                      data.answerVoiceLocale = answerVoice!.locale;
                       await ref
                           .read(studySetListProvider.notifier)
-                          .updateStudySet(set);
+                          .updateStudySet(data);
                       if (!mounted) {
                         return;
                       }
-                      showToast(context, "Study set updated");
+                      showToast(context,
+                          isEdit ? "Study set updated" : "Study set created");
                       Navigator.of(context).pop();
                     } catch (e) {
-                      showToast(context, "Error updating study set");
+                      showToast(
+                          context,
+                          isEdit
+                              ? "Error updating study set"
+                              : "Error creating study set");
                       return;
                     }
                   },

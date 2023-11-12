@@ -49,8 +49,12 @@ class _CardListPageState extends ConsumerState<CardListPage> {
                   value: "edit",
                   child: const Text("Edit"),
                   onTap: () {
+                    final set = ref.read(currentStudySetProvider);
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const EditStudySet()));
+                      builder: (context) => EditStudySet(
+                        initialData: set,
+                      ),
+                    ));
                   },
                 ),
                 PopupMenuItem(
