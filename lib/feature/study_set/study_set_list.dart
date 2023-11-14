@@ -35,7 +35,14 @@ class StudySetListPage extends ConsumerWidget {
       return ListView.builder(
         itemBuilder: (context, index) {
           final set = sets[index];
-          final completedCount = set.items.where((e) => e.quality == 5).length;
+          final needsReviewCount = set.items.where((e) {
+            final nextReview = e.reviewAfter;
+            if (nextReview == null) {
+              // if there is no next review, it means the card is new
+              return true;
+            }
+            return DateTime.now().isAfter(nextReview);
+          }).length;
           return Padding(
             padding: const EdgeInsets.all(16.0),
             child: InkWell(
@@ -55,7 +62,7 @@ class StudySetListPage extends ConsumerWidget {
                         Text(set.name, style: theme.textTheme.headlineLarge),
                         const SizedBox(height: 16),
                         Text(
-                            "$completedCount / ${set.items.length} ${unitText(set.items.length, "card", "cards")}"),
+                            "$needsReviewCount / ${set.items.length} ${unitText(set.items.length, "card", "cards")} needs practice"),
                         const SizedBox(height: 16),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
