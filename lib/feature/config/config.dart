@@ -27,7 +27,7 @@ class _ConfigPageState extends ConsumerState<ConfigPage> {
       ),
       body: ListView(children: [
         ListTile(
-          title: const Text("Show the answer randomly"),
+          title: const Text("Show an answer randomly"),
           trailing: Switch.adaptive(
               value: showAnswerRandomly,
               onChanged: (value) {
