@@ -4,18 +4,22 @@ import 'package:vocardo/core/model/config.dart';
 import 'package:vocardo/core/service/config/config_service.dart';
 
 class ConfigPage extends ConsumerStatefulWidget {
-  const ConfigPage({Key? key}) : super(key: key);
+  final Config config;
+
+  const ConfigPage({
+    Key? key,
+    required this.config,
+  }) : super(key: key);
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _ConfigPageState();
 }
 
 class _ConfigPageState extends ConsumerState<ConfigPage> {
-  late bool showAnswerRandomly;
+  late Config config;
 
   @override
   void initState() {
-    final config = ref.read(configServiceProvider).valueOrNull ?? defaultConfig;
-    showAnswerRandomly = config.showAnswerRandomly;
+    config = widget.config.copyWith();
     super.initState();
   }
 
@@ -29,10 +33,10 @@ class _ConfigPageState extends ConsumerState<ConfigPage> {
         ListTile(
           title: const Text("Show an answer randomly"),
           trailing: Switch.adaptive(
-              value: showAnswerRandomly,
+              value: config.showAnswerRandomly,
               onChanged: (value) {
                 setState(() {
-                  showAnswerRandomly = value;
+                  config.showAnswerRandomly = value;
                 });
               }),
         ),
@@ -51,9 +55,7 @@ class _ConfigPageState extends ConsumerState<ConfigPage> {
           Expanded(
             child: FilledButton(
                 onPressed: () async {
-                  final config = ref.read(configServiceProvider).valueOrNull ??
-                      defaultConfig;
-                  config.showAnswerRandomly = showAnswerRandomly;
+                  print("save config ${config.showAnswerRandomly}");
                   await ref
                       .read(configServiceProvider.notifier)
                       .saveConfig(config);

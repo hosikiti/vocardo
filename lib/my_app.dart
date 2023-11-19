@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:vocardo/core/service/config/config_service.dart';
 import 'package:vocardo/core/service/study_set/study_set_list_provider.dart';
 import 'package:vocardo/feature/config/config.dart';
 import 'package:vocardo/feature/study_set/edit_study_set.dart';
@@ -62,13 +63,13 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
   }
 }
 
-class MyDrawer extends StatelessWidget {
+class MyDrawer extends ConsumerWidget {
   const MyDrawer({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Drawer(
       child: ListView(
         children: <Widget>[
@@ -82,14 +83,21 @@ class MyDrawer extends StatelessWidget {
           ),
           Column(
             children: [
-              ListTile(
-                title: const Text('Settings'),
-                onTap: () {
-                  // navigate to config page
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const ConfigPage()));
-                },
-              ),
+              ref.watch(configServiceProvider).when(data: (config) {
+                print("updated config${config.showAnswerRandomly}");
+                return ListTile(
+                  title: const Text('Settings'),
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => ConfigPage(config: config),
+                    ));
+                  },
+                );
+              }, error: (_, __) {
+                return const SizedBox.shrink();
+              }, loading: () {
+                return const SizedBox.shrink();
+              }),
               const ListTile(
                 title: Text('About'),
                 onTap: null,
