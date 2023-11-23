@@ -55,7 +55,6 @@ class _ConfigPageState extends ConsumerState<ConfigPage> {
           Expanded(
             child: FilledButton(
                 onPressed: () async {
-                  print("save config ${config.showAnswerRandomly}");
                   await ref
                       .read(configServiceProvider.notifier)
                       .saveConfig(config);

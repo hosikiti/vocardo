@@ -57,7 +57,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
               builder: (context) => const EditStudySet(),
             ));
           },
-          tooltip: 'Add',
+          tooltip: 'Add Set',
           child: const Icon(Icons.add),
         ));
   }
@@ -84,7 +84,6 @@ class MyDrawer extends ConsumerWidget {
           Column(
             children: [
               ref.watch(configServiceProvider).when(data: (config) {
-                print("updated config${config.showAnswerRandomly}");
                 return ListTile(
                   title: const Text('Settings'),
                   onTap: () {
