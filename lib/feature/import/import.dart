@@ -45,7 +45,7 @@ class _ImportPageState extends ConsumerState<ImportPage> {
             final studySet = ref.read(currentStudySetProvider);
             final cardService = await ref.read(cardServiceProvider.future);
 
-            for (var line in text.split("\n")) {
+            for (final line in text.split("\n")) {
               final parts = line.split(",");
               if (parts.length == 2) {
                 final question = unquote(parts[0]);
