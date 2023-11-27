@@ -7,4 +7,9 @@ void main() {
     expect(unitText(1, "card", "cards"), "card");
     expect(unitText(2, "card", "cards"), "cards");
   });
+
+  test('unquote', () {
+    expect(unquote('"abc"'), "abc");
+    expect(unquote('abc'), "abc");
+  });
 }
