@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 Future<bool> showOkCancelDialog(BuildContext context,
     {required String content, required String title}) async {
-  // show the dialog
   final result = await showDialog<bool>(
     context: context,
     builder: (BuildContext context) {
