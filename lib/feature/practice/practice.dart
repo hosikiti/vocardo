@@ -215,9 +215,11 @@ class _PracticePageState extends ConsumerState<PracticePage> {
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Center(
-                child: Text(showAnswer ? card.answer : card.question,
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.headlineLarge),
+                child: SelectionArea(
+                  child: Text(showAnswer ? card.answer : card.question,
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.headlineLarge),
+                ),
               ),
             ),
             Row(
