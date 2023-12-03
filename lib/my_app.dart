@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vocardo/core/service/config/config_service.dart';
 import 'package:vocardo/core/service/study_set/study_set_list_provider.dart';
+import 'package:vocardo/core/widget/app_version_widget.dart';
 import 'package:vocardo/feature/config/config.dart';
 import 'package:vocardo/feature/study_set/edit_study_set.dart';
 import 'package:vocardo/feature/study_set/study_set_list.dart';
@@ -70,15 +71,42 @@ class MyDrawer extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final textStyle = TextStyle(
+      fontSize: Theme.of(context).textTheme.bodyMedium?.fontSize ?? 24.0,
+      color: Theme.of(context).colorScheme.onPrimary,
+    );
+
     return Drawer(
       child: ListView(
         children: <Widget>[
-          const DrawerHeader(
-            child: Text(
-              'Vocardo',
-              style: TextStyle(
-                fontSize: 24,
-              ),
+          DrawerHeader(
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.primary,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Vocardo',
+                  style: TextStyle(
+                    fontSize:
+                        Theme.of(context).textTheme.headlineLarge?.fontSize ??
+                            24.0,
+                    color: Theme.of(context).colorScheme.onPrimary,
+                  ),
+                ),
+                Row(
+                  children: [
+                    Text(
+                      'v.',
+                      style: textStyle,
+                    ),
+                    AppVersion(
+                      style: textStyle,
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
           Column(
@@ -97,10 +125,6 @@ class MyDrawer extends ConsumerWidget {
               }, loading: () {
                 return const SizedBox.shrink();
               }),
-              const ListTile(
-                title: Text('About'),
-                onTap: null,
-              ),
             ],
           )
         ],
