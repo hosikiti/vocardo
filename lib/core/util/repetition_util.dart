@@ -1,45 +1,32 @@
-class RepetitionStats {
-  final int repeatCount;
-  final int nextIntervalDays;
-  final double lastEasinessFactor;
-
-  RepetitionStats({
-    required this.repeatCount,
-    required this.lastEasinessFactor,
-    required this.nextIntervalDays,
-  });
-
-  @override
-  toString() {
-    return 'RepetitionStats(repeatCount: $repeatCount, lastEasinessFactor: $lastEasinessFactor, nextIntervalDays: $nextIntervalDays)';
-  }
-}
-
-RepetitionStats calculateRepetationInterval({
+({int repeatCount, int nextIntervalDay, double lastEasinessFactor})
+    calculateRepetationInterval({
   required int repeatCount,
   required int quality,
   double? lastEasinessFactor,
   int? lastIntervalDays,
 }) {
-  var easinessFactor = lastEasinessFactor ?? 2.5;
+  double easinessFactor = lastEasinessFactor ?? 2.5;
 
   if (quality < 3) {
-    return RepetitionStats(
-        repeatCount: 0,
-        lastEasinessFactor: easinessFactor,
-        nextIntervalDays: 1);
+    return (
+      repeatCount: 0,
+      nextIntervalDay: 1,
+      lastEasinessFactor: easinessFactor
+    );
   }
 
   if (repeatCount == 1) {
-    return RepetitionStats(
-        repeatCount: repeatCount,
-        lastEasinessFactor: easinessFactor,
-        nextIntervalDays: 1);
+    return (
+      repeatCount: repeatCount,
+      nextIntervalDay: 1,
+      lastEasinessFactor: easinessFactor
+    );
   } else if (repeatCount == 2) {
-    return RepetitionStats(
-        repeatCount: repeatCount,
-        lastEasinessFactor: easinessFactor,
-        nextIntervalDays: 6);
+    return (
+      repeatCount: repeatCount,
+      nextIntervalDay: 6,
+      lastEasinessFactor: easinessFactor
+    );
   }
 
   if (lastIntervalDays == null) {
@@ -53,8 +40,9 @@ RepetitionStats calculateRepetationInterval({
   }
   final newIntervalDays = (lastIntervalDays.toDouble() * newEF).round();
 
-  return RepetitionStats(
-      repeatCount: repeatCount,
-      lastEasinessFactor: newEF,
-      nextIntervalDays: newIntervalDays);
+  return (
+    repeatCount: repeatCount,
+    nextIntervalDay: newIntervalDays,
+    lastEasinessFactor: newEF
+  );
 }

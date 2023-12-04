@@ -175,13 +175,13 @@ class _PracticePageState extends ConsumerState<PracticePage> {
 
     // This makes reviewing the card 4 times faster.
     DateTime reviewAfter =
-        DateTime.now().add(Duration(hours: rep.nextIntervalDays * 6));
+        DateTime.now().add(Duration(hours: rep.nextIntervalDay * 6));
 
     await cardService.updateCardRepetition(
       card.id,
       repetition: rep.repeatCount,
       easinessFactor: rep.lastEasinessFactor,
-      interval: rep.nextIntervalDays,
+      interval: rep.nextIntervalDay,
       quality: quality,
       reviewAfter: reviewAfter,
       lastReviewed: DateTime.now(),
