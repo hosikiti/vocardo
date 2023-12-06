@@ -62,7 +62,7 @@ class StudySetListPage extends ConsumerWidget {
                         Text(set.name, style: theme.textTheme.headlineLarge),
                         const SizedBox(height: 16),
                         Text(
-                            "$needsReviewCount / ${set.items.length} ${unitText(set.items.length, "card", "cards")} needs practice"),
+                            "$needsReviewCount / ${set.items.length} ${unitText(set.items.length, "card", "cards")} need practice"),
                         const SizedBox(height: 16),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
