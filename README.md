@@ -2,6 +2,8 @@
 
 Vocardo is a voice-recordable flashcard app, helping you learn a foreign language by recording your own voice and playing it back to you in reviewing sessions.
 
+<img width="250" src="https://github.com/hosikiti/vocardo/assets/1973308/5b4a3589-5035-4f91-a238-a53716616a30"/>
+
 ## Memo
 
 - This app's folder structure is based on this repository: https://github.com/Roaa94/movies_app
