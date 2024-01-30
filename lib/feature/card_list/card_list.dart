@@ -138,7 +138,6 @@ class _CardListPageState extends ConsumerState<CardListPage> {
                 onPressed: noCard
                     ? null
                     : () {
-                        ref.read(practiceCardListProvider.notifier).init();
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => const PracticePage()));
                       },

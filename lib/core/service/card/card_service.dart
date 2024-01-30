@@ -30,6 +30,17 @@ class CardService {
     return fromModel(items);
   }
 
+  Future<List<CardItem>> getAllForPractice(int studySetId) async {
+    final query = isar.items
+        .filter()
+        .studySet((q) => q.idEqualTo(studySetId))
+        .reviewAfterLessThan(DateTime.now())
+        .limit(100)
+        .build();
+    final card = await query.findAll();
+    return fromModel(card);
+  }
+
   Future<Item?> getItem(int id) async {
     final item = await isar.items.filter().idEqualTo(id).findFirst();
     return item;
@@ -102,6 +113,22 @@ class CardService {
       item.lastReviewed = lastReviewed;
       await isar.items.put(item);
     });
+  }
+
+  Future<void> resetAllCardStats() async {
+    final items = await isar.items.where().findAll();
+
+    for (final item in items) {
+      await isar.writeTxn(() async {
+        item.repetition = null;
+        item.easinessFactor = 2.5;
+        item.quality = null;
+        item.interval = null;
+        item.reviewAfter = null;
+        item.lastReviewed = null;
+        await isar.items.put(item);
+      });
+    }
   }
 
   Future<List<int>?> getSound(int id) async {

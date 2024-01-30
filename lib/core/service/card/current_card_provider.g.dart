@@ -6,12 +6,12 @@ part of 'current_card_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$currentCardHash() => r'ffd726653710a4c756b8038351672cf39b3fa455';
+String _$currentCardHash() => r'e9aee49243529cfe3a8c215e2d392b9975721bf9';
 
 /// See also [CurrentCard].
 @ProviderFor(CurrentCard)
 final currentCardProvider =
-    AsyncNotifierProvider<CurrentCard, CardItem?>.internal(
+    AutoDisposeAsyncNotifierProvider<CurrentCard, CardItem?>.internal(
   CurrentCard.new,
   name: r'currentCardProvider',
   debugGetCreateSourceHash:
@@ -20,6 +20,6 @@ final currentCardProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$CurrentCard = AsyncNotifier<CardItem?>;
+typedef _$CurrentCard = AutoDisposeAsyncNotifier<CardItem?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

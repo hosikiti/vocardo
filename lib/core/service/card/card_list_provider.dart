@@ -45,8 +45,8 @@ class CardList extends _$CardList {
   Future<void> deleteCard(CardItem card) async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
-      final man = await ref.read(cardServiceProvider.future);
-      man.deleteCard(card.id);
+      final cardService = await ref.read(cardServiceProvider.future);
+      cardService.deleteCard(card.id);
       return state.valueOrNull!.where((item) => item != card).toList();
     });
   }

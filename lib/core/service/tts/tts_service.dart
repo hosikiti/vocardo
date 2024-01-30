@@ -71,8 +71,6 @@ class CurrentTts extends _$CurrentTts {
   Future<List<String>> getLanguageList() async {
     final languages = await state.getLanguages as List<dynamic>;
     return languages.map((e) => e.toString()).toList()
-      ..sort(
-        (a, b) => a.compareTo(b),
-      );
+      ..sort((a, b) => a.compareTo(b));
   }
 }

@@ -4,7 +4,7 @@ import 'package:vocardo/core/service/card/practice_card_list_provider.dart';
 
 part 'current_card_provider.g.dart';
 
-@Riverpod(keepAlive: true)
+@Riverpod(keepAlive: false)
 class CurrentCard extends _$CurrentCard {
   @override
   Future<CardItem?> build() async {

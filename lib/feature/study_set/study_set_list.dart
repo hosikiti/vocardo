@@ -74,14 +74,12 @@ class StudySetListPage extends ConsumerWidget {
                                           .read(
                                               currentStudySetProvider.notifier)
                                           .setStudySet(set);
-                                      ref
-                                          .read(
-                                              practiceCardListProvider.notifier)
-                                          .init();
                                       Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const PracticePage()));
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              const PracticePage(),
+                                        ),
+                                      );
                                     }
                                   : null,
                               label: const Text(
