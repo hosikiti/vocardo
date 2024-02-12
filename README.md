@@ -1,14 +1,22 @@
 # Vocardo
 
-Vocardo is a voice-recordable flashcard app, helping you learn a foreign language by recording your own voice and playing it back to you in reviewing sessions.
+Vocardo is a voice-recordable and speakable flashcard app. It helps you learn a foreign language effectively by recording your own voice and playing it back to you in reviewing sessions. You can also check the pronunciation of the word by the app's Text-to-Speech feature.
 
 <img width="250" src="https://github.com/hosikiti/vocardo/assets/1973308/5b4a3589-5035-4f91-a238-a53716616a30"/>
 
-## Memo
+## Architecture 
 
-- This app's folder structure is based on this repository: https://github.com/Roaa94/movies_app
+- Uses a feature-driven folder architecture, based on: https://github.com/Roaa94/movies_app
+- Uses Riverpod(v2) for state management. All global states are managed by providers defined in the `lib/core/services` folder and are exposed to the UI using `ProviderScope` and `Consumer` widgets.
+- Uses `freezed` for immutability.
+- Uses `isar` for local database.
 
-## Features to be implemented
+## Testing Strategy
+
+- Uses the `test` package for unit testing.
+- Tests only complex logic for now, but will be adding more in the future.
+
+## To be implemented ...
 
 - [x] Edit card.
 - [x] Edit a set's name.
