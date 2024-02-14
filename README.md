@@ -8,14 +8,13 @@ Vocardo is a voice-recordable and speakable flashcard app. It helps you learn a 
 
 - Uses a feature-driven folder architecture, based on: https://github.com/Roaa94/movies_app
 - Uses Riverpod(v2) for state management. All global states are managed by providers defined in the `lib/core/services` folder and are exposed to the UI using `ProviderScope` and `Consumer` widgets.
-- Uses `freezed` for immutability.
 - Uses `isar` for local database.
 
 ## Testing Strategy
 
 - Unit & Widget tests are provided using Flutter test package.
 - Currently, only tests complex logic / widgets.
-- `flutter test` run all tests.
+- `flutter test` runs all tests.
 
 ## To be implemented ...
 
