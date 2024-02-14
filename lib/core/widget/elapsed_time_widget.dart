@@ -7,7 +7,7 @@ class ElapsedTime extends ConsumerWidget {
   const ElapsedTime({Key? key, required this.elapsedInSec}) : super(key: key);
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    if (elapsedInSec >= 60 * 60) {
+    if (elapsedInSec < 0 || elapsedInSec >= 60 * 60) {
       return const Text("--:--");
     }
 

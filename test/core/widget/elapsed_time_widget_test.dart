@@ -62,7 +62,20 @@ void main() {
     });
 
     testWidgets(
-        'should display correct elapsed time when given second is more than 100 minutes',
+        'should display empty time when given second is less than 0 seconds',
+        (WidgetTester tester) async {
+      // Arrange
+      final widget = makeTestableWidget(3600);
+
+      // Act
+      await tester.pumpWidget(widget);
+
+      // Assert
+      expect(find.text('--:--'), findsOneWidget);
+    });
+
+    testWidgets(
+        'should display empty time when given second is more than 59 minutes 59 seconds',
         (WidgetTester tester) async {
       // Arrange
       final widget = makeTestableWidget(3600);
