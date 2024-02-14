@@ -13,8 +13,9 @@ Vocardo is a voice-recordable and speakable flashcard app. It helps you learn a 
 
 ## Testing Strategy
 
-- Uses the `test` package for unit testing.
-- Tests only complex logic for now, but will be adding more in the future.
+- Unit & Widget tests are provided using Flutter test package.
+- Currently, only tests complex logic / widgets.
+- `flutter test` run all tests.
 
 ## To be implemented ...
 
