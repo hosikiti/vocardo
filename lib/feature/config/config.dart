@@ -58,7 +58,7 @@ class _ConfigPageState extends ConsumerState<ConfigPage> {
                   await ref
                       .read(configServiceProvider.notifier)
                       .saveConfig(config);
-                  if (!mounted) {
+                  if (!context.mounted) {
                     return;
                   }
                   Navigator.pop(context);

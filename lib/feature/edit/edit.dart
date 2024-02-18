@@ -88,7 +88,7 @@ class _EditPageState extends ConsumerState<EditPage> {
                     await addOrUpdate(
                         _questionController.text, _answerController.text);
 
-                    if (!mounted) {
+                    if (!context.mounted) {
                       return;
                     }
                     showToast(context, "Card ${_isEdit ? "updated" : "added"}");

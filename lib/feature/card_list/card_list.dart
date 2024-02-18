@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vocardo/core/service/card/card_list_provider.dart';
-import 'package:vocardo/core/service/card/practice_card_list_provider.dart';
 import 'package:vocardo/core/service/study_set/current_study_set_provider.dart';
 import 'package:vocardo/core/service/study_set/study_set_list_provider.dart';
 import 'package:vocardo/core/service/tts/tts_service.dart';
@@ -78,7 +77,7 @@ class _CardListPageState extends ConsumerState<CardListPage> {
                     final studySetProvider =
                         ref.read(studySetListProvider.notifier);
                     studySetProvider.deleteStudySet(set.id);
-                    if (!mounted) {
+                    if (!context.mounted) {
                       return;
                     }
                     Navigator.of(context).pop();

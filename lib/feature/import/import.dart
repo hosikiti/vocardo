@@ -57,7 +57,7 @@ class _ImportPageState extends ConsumerState<ImportPage> {
                     studySet: studySet, question: question, answer: answer);
               }
             }
-            if (mounted) {
+            if (context.mounted) {
               Navigator.of(context).pop();
             }
           }
