@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vocardo/core/service/card/card_service.dart';
-import 'package:vocardo/core/service/study_set/current_study_set_provider.dart';
+import 'package:vocardo/feature/study_set/provider/current_study_set_provider.dart';
 import 'package:vocardo/core/util/text_util.dart';
 
 class ImportPage extends ConsumerStatefulWidget {

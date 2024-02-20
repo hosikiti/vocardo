@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vocardo/core/model/study_set.dart';
-import 'package:vocardo/core/service/study_set/study_set_list_provider.dart';
+import 'package:vocardo/feature/study_set/provider/study_set_list_provider.dart';
 import 'package:vocardo/core/service/tts/tts_service.dart';
 import 'package:vocardo/core/widget/toast_widget.dart';
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vocardo/core/service/config/config_service.dart';
-import 'package:vocardo/core/service/study_set/study_set_list_provider.dart';
+import 'package:vocardo/feature/study_set/provider/study_set_list_provider.dart';
 import 'package:vocardo/core/widget/app_version_widget.dart';
 import 'package:vocardo/feature/config/config.dart';
 import 'package:vocardo/feature/study_set/edit_study_set.dart';

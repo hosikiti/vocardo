@@ -1,6 +1,6 @@
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:vocardo/core/service/study_set/current_study_set_provider.dart';
+import 'package:vocardo/feature/study_set/provider/current_study_set_provider.dart';
 
 part 'tts_service.g.dart';
 
