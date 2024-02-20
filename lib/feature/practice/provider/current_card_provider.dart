@@ -1,5 +1,5 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:vocardo/feature/card_list/card_list_provider.dart';
+import 'package:vocardo/feature/card_list/provider/card_list_provider.dart';
 import 'package:vocardo/feature/practice/provider/practice_card_list_provider.dart';
 
 part 'current_card_provider.g.dart';

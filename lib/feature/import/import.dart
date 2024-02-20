@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:vocardo/core/service/card/card_service.dart';
 import 'package:vocardo/feature/study_set/provider/current_study_set_provider.dart';
-import 'package:vocardo/core/util/text_util.dart';
 
 class ImportPage extends ConsumerStatefulWidget {
   const ImportPage({Key? key}) : super(key: key);
@@ -42,21 +40,8 @@ class _ImportPageState extends ConsumerState<ImportPage> {
           final text = _textController.text;
           if (value == 0) {
             // Import button is pressed
-            final studySet = ref.read(currentStudySetProvider);
-            final cardService = await ref.read(cardServiceProvider.future);
-
-            for (final line in text.split("\n")) {
-              final parts = line.split(",");
-              if (parts.length == 2) {
-                final question = unquote(parts[0]);
-                final answer = unquote(parts[1]);
-                if (question.isEmpty || answer.isEmpty) {
-                  continue;
-                }
-                cardService.addCard(
-                    studySet: studySet, question: question, answer: answer);
-              }
-            }
+            final studySet = ref.read(currentStudySetProvider.notifier);
+            await studySet.importCsv(text);
             if (context.mounted) {
               Navigator.of(context).pop();
             }

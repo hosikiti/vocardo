@@ -6,7 +6,7 @@ part of 'current_study_set_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$currentStudySetHash() => r'4de76f3e1e6f029bf16d6cded5d5986e0692b099';
+String _$currentStudySetHash() => r'01d1270bd45483034efc96e572ddb47cb66fb63c';
 
 /// See also [CurrentStudySet].
 @ProviderFor(CurrentStudySet)
