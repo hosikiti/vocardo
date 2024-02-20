@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:vocardo/core/service/card/card_service.dart';
-import 'package:vocardo/core/service/card/current_card_provider.dart';
+import 'package:vocardo/feature/practice/current_card_provider.dart';
 import 'package:vocardo/core/service/recorder/recorder_service.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:vocardo/core/widget/elapsed_time_widget.dart';

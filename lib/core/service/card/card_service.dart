@@ -2,7 +2,7 @@ import 'package:isar/isar.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:vocardo/core/model/item.dart';
 import 'package:vocardo/core/model/study_set.dart';
-import 'package:vocardo/core/service/card/card_list_provider.dart';
+import 'package:vocardo/feature/card_list/card_list_provider.dart';
 import 'package:vocardo/core/service/isar/isar_service.dart';
 
 part 'card_service.g.dart';

@@ -4,7 +4,7 @@ import 'package:vocardo/core/model/item.dart';
 import 'package:vocardo/core/model/study_set.dart';
 import 'package:vocardo/core/service/card/card_service.dart';
 import 'package:vocardo/core/service/isar/isar_service.dart';
-import 'package:vocardo/core/service/study_set/current_study_set_provider.dart';
+import 'package:vocardo/feature/study_set/provider/current_study_set_provider.dart';
 
 part 'card_list_provider.g.dart';
 
