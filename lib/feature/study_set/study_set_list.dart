@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:vocardo/core/model/study_set.dart';
 import 'package:vocardo/feature/study_set/provider/current_study_set_provider.dart';
 import 'package:vocardo/feature/study_set/provider/study_set_list_provider.dart';
 import 'package:vocardo/core/util/text_util.dart';
@@ -14,7 +15,6 @@ class StudySetListPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final data = ref.watch(studySetListProvider);
-    final theme = Theme.of(context);
 
     return data.when(data: (sets) {
       if (sets.isEmpty) {
@@ -34,14 +34,6 @@ class StudySetListPage extends ConsumerWidget {
       return ListView.builder(
         itemBuilder: (context, index) {
           final set = sets[index];
-          final needsReviewCount = set.items.where((e) {
-            final nextReview = e.reviewAfter;
-            if (nextReview == null) {
-              // if there is no next review, it means the card is new
-              return true;
-            }
-            return DateTime.now().isAfter(nextReview);
-          }).length;
           return Padding(
             padding: const EdgeInsets.all(16.0),
             child: InkWell(
@@ -51,62 +43,7 @@ class StudySetListPage extends ConsumerWidget {
                   builder: (context) => const CardListPage(),
                 ));
               },
-              child: Card(
-                  elevation: 4,
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(set.name, style: theme.textTheme.headlineLarge),
-                        const SizedBox(height: 16),
-                        Text(
-                            "$needsReviewCount / ${set.items.length} ${unitText(set.items.length, "card", "cards")} need practice"),
-                        const SizedBox(height: 16),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            FilledButton.icon(
-                              onPressed: set.items.isNotEmpty
-                                  ? () {
-                                      ref
-                                          .read(
-                                              currentStudySetProvider.notifier)
-                                          .setStudySet(set);
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              const PracticePage(),
-                                        ),
-                                      );
-                                    }
-                                  : null,
-                              label: const Text(
-                                "PRACTICE",
-                              ),
-                              icon: const Icon(Icons.play_arrow),
-                            ),
-                            const SizedBox(width: 16),
-                            OutlinedButton.icon(
-                              onPressed: () {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => EditPage(
-                                    studySet: set,
-                                  ),
-                                ));
-                              },
-                              label: const Text(
-                                "ADD",
-                              ),
-                              icon: const Icon(
-                                Icons.add,
-                              ),
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                  )),
+              child: StudySetCard(set: set),
             ),
           );
         },
@@ -121,5 +58,74 @@ class StudySetListPage extends ConsumerWidget {
         child: CircularProgressIndicator(),
       );
     });
+  }
+}
+
+class StudySetCard extends ConsumerWidget {
+  const StudySetCard({
+    super.key,
+    required this.set,
+  });
+
+  final StudySet set;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+
+    return Card(
+        elevation: 4,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(set.name, style: theme.textTheme.headlineLarge),
+              const SizedBox(height: 16),
+              Text(
+                  "${set.getNeedsReviewCount()} / ${set.items.length} ${unitText(set.items.length, "card", "cards")} need practice"),
+              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  FilledButton.icon(
+                    onPressed: set.items.isNotEmpty
+                        ? () {
+                            ref
+                                .read(currentStudySetProvider.notifier)
+                                .setStudySet(set);
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => const PracticePage(),
+                              ),
+                            );
+                          }
+                        : null,
+                    label: const Text(
+                      "PRACTICE",
+                    ),
+                    icon: const Icon(Icons.play_arrow),
+                  ),
+                  const SizedBox(width: 16),
+                  OutlinedButton.icon(
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => EditPage(
+                          studySet: set,
+                        ),
+                      ));
+                    },
+                    label: const Text(
+                      "ADD",
+                    ),
+                    icon: const Icon(
+                      Icons.add,
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
+        ));
   }
 }

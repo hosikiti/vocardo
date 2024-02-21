@@ -18,4 +18,16 @@ class StudySet {
 
   @Backlink(to: 'studySet')
   final items = IsarLinks<Item>();
+
+  int getNeedsReviewCount() {
+    final needsReviewCount = items.where((e) {
+      final nextReview = e.reviewAfter;
+      if (nextReview == null) {
+        // if there is no next review, it means the card is new
+        return true;
+      }
+      return DateTime.now().isAfter(nextReview);
+    }).length;
+    return needsReviewCount;
+  }
 }

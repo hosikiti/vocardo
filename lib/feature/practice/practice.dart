@@ -9,7 +9,6 @@ import 'package:vocardo/feature/practice/provider/practice_card_list_provider.da
 import 'package:vocardo/core/service/config/config_service.dart';
 import 'package:vocardo/feature/study_set/provider/current_study_set_provider.dart';
 import 'package:vocardo/core/service/tts/tts_service.dart';
-import 'package:vocardo/core/util/repetition_util.dart';
 import 'package:vocardo/core/widget/dialog_widget.dart';
 import 'package:vocardo/core/widget/recording_dialog_widget.dart';
 import 'package:vocardo/feature/edit/edit.dart';
@@ -155,49 +154,18 @@ class _PracticePageState extends ConsumerState<PracticePage> {
   }
 
   void setCardNewInterval(int quality) async {
-    final currentCard = ref.read(currentCardProvider);
-    final card = currentCard.valueOrNull;
-    if (card == null) {
-      return;
-    }
-
-    final cardService = await ref.read(cardServiceProvider.future);
-    final item = await cardService.getItem(card.id);
-    if (item == null) {
-      return;
-    }
-
-    final rep = calculateRepetationInterval(
-        repeatCount: (item.repetition ?? 0) + 1,
-        quality: quality,
-        lastEasinessFactor: item.easinessFactor,
-        lastIntervalDays: item.interval);
-
-    // This makes reviewing the card 4 times faster.
-    DateTime reviewAfter =
-        DateTime.now().add(Duration(hours: rep.nextIntervalDay * 6));
-
-    await cardService.updateCardRepetition(
-      card.id,
-      repetition: rep.repeatCount,
-      easinessFactor: rep.lastEasinessFactor,
-      interval: rep.nextIntervalDay,
-      quality: quality,
-      reviewAfter: reviewAfter,
-      lastReviewed: DateTime.now(),
-    );
-
-    if (ref.read(currentCardProvider.notifier).isLast()) {
-      if (!mounted) {
-        return;
+    final currentCardNotifier = ref.read(currentCardProvider.notifier);
+    await currentCardNotifier.setNewInterval(quality);
+    if (currentCardNotifier.isLast()) {
+      if (mounted) {
+        Navigator.of(context).pop();
       }
-      Navigator.of(context).pop();
+      return;
     }
 
-    ref.read(currentCardProvider.notifier).next();
+    await currentCardNotifier.next();
 
-    final conf = ref.read(configServiceProvider).valueOrNull ?? defaultConfig;
-    if (conf.showAnswerRandomly) {
+    if (ref.read(configServiceProvider.notifier).shouldShowAnswerRandomly()) {
       setState(() {
         // show the back side randomly
         showAnswer = Random().nextBool();

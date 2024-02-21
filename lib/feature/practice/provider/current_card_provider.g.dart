@@ -6,7 +6,7 @@ part of 'current_card_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$currentCardHash() => r'e9aee49243529cfe3a8c215e2d392b9975721bf9';
+String _$currentCardHash() => r'f665183f99b3e05b333e03c375514595218da3c8';
 
 /// See also [CurrentCard].
 @ProviderFor(CurrentCard)

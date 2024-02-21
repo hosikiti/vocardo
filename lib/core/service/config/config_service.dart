@@ -22,4 +22,9 @@ class ConfigService extends _$ConfigService {
       await db.configs.put(config);
     });
   }
+
+  bool shouldShowAnswerRandomly() {
+    final config = state.valueOrNull ?? defaultConfig;
+    return config.showAnswerRandomly;
+  }
 }
