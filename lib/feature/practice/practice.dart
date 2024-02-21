@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:vocardo/core/model/config.dart';
 import 'package:vocardo/feature/card_list/provider/card_list_provider.dart';
 import 'package:vocardo/feature/practice/provider/current_card_provider.dart';
 import 'package:vocardo/feature/practice/provider/practice_card_list_provider.dart';

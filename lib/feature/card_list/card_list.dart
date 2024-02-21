@@ -163,86 +163,97 @@ class _CardListPageState extends ConsumerState<CardListPage> {
           },
           child: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Card(
-              elevation: 8,
-              child: Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.circle,
-                            color: Theme.of(context).colorScheme.shadow,
-                          )
-                        ]),
-                  ),
-                  Expanded(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        ListTile(
-                          title: Text(
-                            card.question,
-                            style: Theme.of(context).textTheme.headlineSmall,
-                          ),
-                          subtitle: Text(cards[index].answer),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: <Widget>[
-                            Text(
-                                (card.reviewAfter != null
-                                    ? "Review in ${whenIsIt(card.reviewAfter!)}"
-                                    : ""),
-                                style: Theme.of(context).textTheme.bodySmall),
-                            const SizedBox(width: 8),
-                            IconButton(
-                              onPressed: () async {
-                                await ref
-                                    .read(currentTtsProvider.notifier)
-                                    .speakQuestion(card.question);
-                                await ref
-                                    .read(currentTtsProvider.notifier)
-                                    .speakAnswer(card.answer);
-                              },
-                              icon: const Icon(Icons.volume_up),
-                            ),
-                            PopupMenuButton<String>(
-                              itemBuilder: (BuildContext context) {
-                                return [
-                                  PopupMenuItem(
-                                    value: "delete",
-                                    child: const Text("Delete"),
-                                    onTap: () async {
-                                      final yes = await showOkCancelDialog(
-                                          context,
-                                          title: "Delete",
-                                          content: "Are you sure?");
-                                      if (!yes) return;
-
-                                      await ref
-                                          .read(cardListProvider.notifier)
-                                          .deleteCard(cards[index]);
-                                    },
-                                  ),
-                                ];
-                              },
-                            ),
-                            const SizedBox(width: 8),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            child: StudyCard(card: card),
           ),
         );
       },
       itemCount: cards.length,
+    );
+  }
+}
+
+class StudyCard extends ConsumerWidget {
+  const StudyCard({
+    super.key,
+    required this.card,
+  });
+
+  final CardItem card;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Card(
+      elevation: 8,
+      child: Row(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child:
+                Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+              Icon(
+                Icons.circle,
+                color: Theme.of(context).colorScheme.shadow,
+              )
+            ]),
+          ),
+          Expanded(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                ListTile(
+                  title: Text(
+                    card.question,
+                    style: Theme.of(context).textTheme.headlineSmall,
+                  ),
+                  subtitle: Text(card.answer),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                    Text(
+                        (card.reviewAfter != null
+                            ? "Review in ${whenIsIt(card.reviewAfter!)}"
+                            : ""),
+                        style: Theme.of(context).textTheme.bodySmall),
+                    const SizedBox(width: 8),
+                    IconButton(
+                      onPressed: () async {
+                        await ref
+                            .read(currentTtsProvider.notifier)
+                            .speakQuestion(card.question);
+                        await ref
+                            .read(currentTtsProvider.notifier)
+                            .speakAnswer(card.answer);
+                      },
+                      icon: const Icon(Icons.volume_up),
+                    ),
+                    PopupMenuButton<String>(
+                      itemBuilder: (BuildContext context) {
+                        return [
+                          PopupMenuItem(
+                            value: "delete",
+                            child: const Text("Delete"),
+                            onTap: () async {
+                              final yes = await showOkCancelDialog(context,
+                                  title: "Delete", content: "Are you sure?");
+                              if (!yes) return;
+
+                              await ref
+                                  .read(cardListProvider.notifier)
+                                  .deleteCard(card);
+                            },
+                          ),
+                        ];
+                      },
+                    ),
+                    const SizedBox(width: 8),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
