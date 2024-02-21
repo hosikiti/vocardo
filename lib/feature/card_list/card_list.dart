@@ -158,8 +158,9 @@ class _CardListPageState extends ConsumerState<CardListPage> {
           onTap: () {
             final studySet = ref.read(currentStudySetProvider);
             Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) =>
-                    EditPage(studySet: studySet, initialItem: cards[index])));
+              builder: (context) =>
+                  EditPage(studySet: studySet, initialItem: card),
+            ));
           },
           child: Padding(
             padding: const EdgeInsets.all(8.0),
