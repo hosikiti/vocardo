@@ -21,8 +21,8 @@ class CurrentStudySet extends _$CurrentStudySet {
     for (final line in text.split("\n")) {
       final parts = line.split(",");
       if (parts.length == 2) {
-        final question = unquote(parts[0]);
-        final answer = unquote(parts[1]);
+        final question = unquote(parts[0].trim());
+        final answer = unquote(parts[1].trim());
         if (question.isEmpty || answer.isEmpty) {
           continue;
         }
